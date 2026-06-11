@@ -35,15 +35,15 @@ Here are some real examples of what AutoUI can generate from a single prompt:
 
 ### 1. Interactive Comic Website
 **Prompt:** *"Build an interactive comic website with dark theme and colorful panels"*
-![Comic Website UI](demo_assets/screen_02.png)
+![Comic Website UI](screenshots/comic.png)
 
 ### 2. Neon Login Page
 **Prompt:** *"Build a dark login page with neon pink glow effects and glassmorphism card"*
-![Neon Login UI](demo_assets/screen_04.png)
+![Neon Login UI](screenshots/login.png)
 
-### 3. Futuristic Analytics Dashboard
-**Prompt:** *"Design a futuristic dark analytics dashboard with stats cards showing users, revenue, and system load"*
-![Dashboard UI](demo_assets/screen_06.png)
+### 3. Beautiful Portfolio
+**Prompt:** *"Beautiful portfolio homepage"*
+![Portfolio UI](screenshots/portfolio.png)
 
 ---
 
