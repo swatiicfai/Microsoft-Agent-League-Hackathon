@@ -8,131 +8,150 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; overflow: hidden; }
-        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .neon-border { border-color: #3b82f6; box-shadow: 0 0 10px #3b82f640; }
-        .loader { border-top-color: #3b82f6; animation: spinner 1.5s linear infinite; }
-        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        html, body { width: 100%; height: 100%; overflow: hidden; }
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #0f172a; 
+            color: #f8fafc;
+        }
+        .glass-panel { 
+            background: rgba(30, 41, 59, 0.7); 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+        }
+        .neon-border { 
+            border-color: #3b82f6; 
+            box-shadow: 0 0 10px #3b82f640; 
+        }
+        .loader { 
+            border-top-color: #3b82f6; 
+            animation: spinner 1.5s linear infinite; 
+        }
+        @keyframes spinner { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
         .example-btn { transition: all 0.3s ease; }
-        .example-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3); }
+        .example-btn:hover { transform: translateY(-2px); }
         .toast { animation: slideIn 0.3s ease; }
-        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideIn { 
+            from { transform: translateX(400px); opacity: 0; } 
+            to { transform: translateX(0); opacity: 1; } 
+        }
     </style>
 </head>
-<body class="h-screen w-screen flex flex-col">
-    <!-- Navbar -->
-    <nav class="glass-panel h-16 px-6 flex justify-between items-center z-10 border-b border-gray-700">
-        <div class="flex items-center space-x-3">
-            <i class="fa-solid fa-wand-magic-sparkles text-blue-500 text-2xl"></i>
-            <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">AutoUI</h1>
-        </div>
-        <div class="flex items-center space-x-3 gap-2">
-            <span class="text-sm text-gray-400"><i class="fa-solid fa-circle text-green-400 text-xs mr-1"></i> Ready</span>
-            <input type="password" id="api-key-input" placeholder="Gemini API Key" class="bg-slate-800 border border-gray-600 rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 w-48">
-            <button id="copy-html-btn" title="Copy Code" class="bg-slate-700 hover:bg-slate-600 text-white p-2 rounded transition-colors"><i class="fa-solid fa-copy text-sm"></i></button>
-            <button id="download-btn" title="Download" class="bg-slate-700 hover:bg-slate-600 text-white p-2 rounded transition-colors"><i class="fa-solid fa-download text-sm"></i></button>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <div class="flex-1 flex overflow-hidden">
-        
-        <!-- Left Panel -->
-        <div class="w-96 glass-panel border-r border-gray-700 flex flex-col overflow-hidden">
-            
-            <!-- Tabs Header -->
-            <div class="flex border-b border-gray-700 bg-slate-900/50">
-                <button class="chat-tab flex-1 py-3 px-4 text-xs font-semibold text-gray-300 border-b-2 border-blue-500 bg-slate-800/30" data-tab="chat">
-                    <i class="fa-solid fa-robot mr-2"></i>Designer
-                </button>
-                <button class="chat-tab flex-1 py-3 px-4 text-xs font-semibold text-gray-400 border-b-2 border-transparent hover:text-gray-300" data-tab="examples">
-                    <i class="fa-solid fa-lightbulb mr-2"></i>Examples
-                </button>
+<body>
+    <div class="h-screen w-screen flex flex-col">
+        <!-- Navbar -->
+        <nav class="glass-panel h-16 px-6 flex justify-between items-center z-10 border-b border-gray-700 flex-shrink-0">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-wand-magic-sparkles text-blue-500 text-2xl"></i>
+                <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">AutoUI</h1>
             </div>
+            <div class="flex items-center space-x-3">
+                <span class="text-sm text-gray-400"><i class="fa-solid fa-circle text-green-400 text-xs mr-1"></i> Ready</span>
+                <input type="password" id="api-key-input" placeholder="Gemini API Key" class="bg-slate-800 border border-gray-600 rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 w-48">
+                <button id="copy-html-btn" title="Copy" class="bg-slate-700 hover:bg-slate-600 text-white p-2 rounded transition"><i class="fa-solid fa-copy text-sm"></i></button>
+                <button id="download-btn" title="Download" class="bg-slate-700 hover:bg-slate-600 text-white p-2 rounded transition"><i class="fa-solid fa-download text-sm"></i></button>
+            </div>
+        </nav>
 
-            <!-- Chat Tab Content -->
-            <div id="chat-tab" class="chat-tab-content flex flex-col h-full overflow-hidden">
-                <!-- Chat History -->
-                <div id="chat-history" class="flex-1 overflow-y-auto p-4 space-y-4">
-                    <div class="flex items-start space-x-3">
-                        <div class="bg-blue-900/50 p-2 rounded-lg border border-blue-500/30 flex-shrink-0">
-                            <i class="fa-solid fa-robot text-blue-400 text-sm"></i>
+        <!-- Main Content -->
+        <div class="flex-1 flex overflow-hidden">
+            <!-- Left Panel -->
+            <div class="w-96 glass-panel border-r border-gray-700 flex flex-col overflow-hidden flex-shrink-0">
+                
+                <!-- Tabs -->
+                <div class="flex border-b border-gray-700 bg-slate-900/50 flex-shrink-0">
+                    <button class="chat-tab flex-1 py-3 px-4 text-xs font-semibold text-gray-300 border-b-2 border-blue-500 bg-slate-800/30" data-tab="chat">
+                        <i class="fa-solid fa-robot mr-2"></i>Designer
+                    </button>
+                    <button class="chat-tab flex-1 py-3 px-4 text-xs font-semibold text-gray-400 border-b-2 border-transparent hover:text-gray-300" data-tab="examples">
+                        <i class="fa-solid fa-lightbulb mr-2"></i>Examples
+                    </button>
+                </div>
+
+                <!-- Chat Tab -->
+                <div id="chat-tab" class="chat-tab-content flex flex-col flex-1 overflow-hidden">
+                    <div id="chat-history" class="flex-1 overflow-y-auto p-4 space-y-4">
+                        <div class="flex items-start space-x-3">
+                            <div class="bg-blue-900/50 p-2 rounded-lg border border-blue-500/30 flex-shrink-0">
+                                <i class="fa-solid fa-robot text-blue-400 text-sm"></i>
+                            </div>
+                            <div class="bg-slate-800 rounded-lg p-3 text-xs text-gray-200 neon-border flex-1">
+                                <p>Hi! Describe any UI you want, and I'll generate beautiful HTML with Tailwind CSS.</p>
+                            </div>
                         </div>
-                        <div class="bg-slate-800 rounded-lg p-3 text-xs text-gray-200 neon-border flex-1">
-                            <p>Hi! Describe any web UI you want, and I'll generate beautiful HTML with Tailwind CSS.</p>
+                    </div>
+
+                    <div class="p-4 border-t border-gray-700 bg-slate-900/80 flex-shrink-0">
+                        <div class="relative">
+                            <textarea id="prompt-input" rows="3" placeholder="E.g., Dark login page with neon effects..." class="w-full bg-slate-800 border border-gray-600 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-blue-500 resize-none"></textarea>
+                            <button id="send-btn" class="absolute bottom-3 right-3 bg-blue-600 hover:bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center transition">
+                                <i class="fa-solid fa-paper-plane text-xs"></i>
+                            </button>
                         </div>
+                        <p class="text-xs text-gray-500 mt-2">Tip: Be specific with colors and styles</p>
                     </div>
                 </div>
 
-                <!-- Input Area -->
-                <div class="p-4 border-t border-gray-700 bg-slate-900/80 flex-shrink-0">
-                    <div class="relative mb-2">
-                        <textarea id="prompt-input" rows="3" placeholder="E.g., Dark login page with neon effects..." class="w-full bg-slate-800 border border-gray-600 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400 resize-none"></textarea>
-                        <button id="send-btn" class="absolute bottom-3 right-3 bg-blue-600 hover:bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center transition-all">
-                            <i class="fa-solid fa-paper-plane text-xs"></i>
+                <!-- Examples Tab -->
+                <div id="examples-tab" class="chat-tab-content hidden flex flex-col flex-1 overflow-hidden">
+                    <div class="flex-1 overflow-y-auto p-4 space-y-2">
+                        <button class="example-btn w-full text-left p-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-gray-700 text-xs" data-example="Dark login page with neon pink glow and glassmorphism">
+                            <p class="font-medium text-white">🔐 Neon Login</p>
+                            <p class="text-gray-400">Glassmorphism + Glow</p>
+                        </button>
+                        <button class="example-btn w-full text-left p-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-gray-700 text-xs" data-example="Beautiful portfolio with smooth animations and gradient text">
+                            <p class="font-medium text-white">💼 Portfolio</p>
+                            <p class="text-gray-400">Animations + Gradients</p>
+                        </button>
+                        <button class="example-btn w-full text-left p-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-gray-700 text-xs" data-example="Dashboard with colorful charts and dark theme">
+                            <p class="font-medium text-white">📊 Dashboard</p>
+                            <p class="text-gray-400">Charts + Cards</p>
+                        </button>
+                        <button class="example-btn w-full text-left p-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-gray-700 text-xs" data-example="Product showcase with animated hover effects">
+                            <p class="font-medium text-white">🛍️ Shop</p>
+                            <p class="text-gray-400">Grid + Animations</p>
+                        </button>
+                        <button class="example-btn w-full text-left p-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-gray-700 text-xs" data-example="Contact form with glassmorphism styling">
+                            <p class="font-medium text-white">📧 Contact</p>
+                            <p class="text-gray-400">Forms + Validation</p>
                         </button>
                     </div>
-                    <p class="text-xs text-gray-500">Tip: Be specific with colors and styles</p>
                 </div>
             </div>
 
-            <!-- Examples Tab Content -->
-            <div id="examples-tab" class="chat-tab-content hidden flex flex-col h-full overflow-hidden">
-                <div class="flex-1 overflow-y-auto p-4 space-y-2">
-                    <button class="example-btn w-full text-left p-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-gray-700 text-xs" data-example="Dark login page with neon pink glow effects and glassmorphism card">
-                        <p class="font-medium text-white">🔐 Neon Login</p>
-                        <p class="text-gray-400">Glassmorphism + Glow</p>
-                    </button>
-                    <button class="example-btn w-full text-left p-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-gray-700 text-xs" data-example="Beautiful portfolio homepage with dark theme, smooth animations, and gradient text">
-                        <p class="font-medium text-white">💼 Portfolio</p>
-                        <p class="text-gray-400">Animations + Gradients</p>
-                    </button>
-                    <button class="example-btn w-full text-left p-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-gray-700 text-xs" data-example="Dashboard with colorful charts, dark theme, card layout with icons">
-                        <p class="font-medium text-white">📊 Dashboard</p>
-                        <p class="text-gray-400">Charts + Cards</p>
-                    </button>
-                    <button class="example-btn w-full text-left p-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-gray-700 text-xs" data-example="Product showcase page with animated hover effects and product grid">
-                        <p class="font-medium text-white">🛍️ Shop</p>
-                        <p class="text-gray-400">Grid + Animations</p>
-                    </button>
-                    <button class="example-btn w-full text-left p-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-gray-700 text-xs" data-example="Contact form with email, phone, and message fields with glassmorphism">
-                        <p class="font-medium text-white">📧 Contact</p>
-                        <p class="text-gray-400">Forms + Validation</p>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Right Panel: Preview -->
-        <div class="flex-1 bg-white flex flex-col overflow-hidden">
-            <!-- Preview Header -->
-            <div class="bg-gray-200 border-b border-gray-300 p-2 flex items-center justify-between px-4 flex-shrink-0">
-                <div class="flex items-center space-x-2">
-                    <div class="flex space-x-1">
-                        <div class="w-3 h-3 rounded-full bg-red-400"></div>
-                        <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
-                        <div class="w-3 h-3 rounded-full bg-green-400"></div>
+            <!-- Right Panel: Preview -->
+            <div class="flex-1 bg-white flex flex-col overflow-hidden">
+                <div class="bg-gray-200 border-b border-gray-300 p-2 flex items-center justify-between px-4 flex-shrink-0">
+                    <div class="flex items-center space-x-2">
+                        <div class="flex space-x-1">
+                            <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                        </div>
+                        <span class="text-xs text-gray-700 font-medium">AutoUI Live Preview</span>
                     </div>
-                    <span class="text-xs text-gray-700 font-medium">AutoUI Live Preview</span>
+                    <span id="preview-status" class="text-xs text-gray-600"><i class="fa-solid fa-circle text-green-500 text-xs mr-1"></i>Ready</span>
                 </div>
-                <span id="preview-status" class="text-xs text-gray-600"><i class="fa-solid fa-circle text-green-500 text-xs mr-1"></i>Ready</span>
-            </div>
-            
-            <!-- Preview Area -->
-            <div id="preview-container" class="flex-1 relative overflow-auto bg-gradient-to-br from-gray-50 to-gray-100">
-                <iframe id="preview-frame" class="w-full h-full border-0" srcdoc="<html><body style='display:flex;height:100vh;align-items:center;justify-content:center;font-family:sans-serif;color:#999;background:linear-gradient(135deg,#f5f7fa,#c3cfe2);'><div style='text-align:center;'><h2 style='color:#333;margin:0;font-size:24px;'>✨ AutoUI</h2><p style='color:#999;margin:10px 0 0;font-size:14px;'>Enter API key and describe a UI</p></div></body></html>"></iframe>
                 
-                <!-- Loading -->
-                <div id="loading-overlay" class="absolute inset-0 bg-white/80 backdrop-blur-sm hidden flex-col items-center justify-center z-50">
-                    <div class="loader rounded-full border-4 border-gray-300 border-t-blue-500 w-12 h-12 mb-4"></div>
-                    <p class="text-gray-700 font-semibold">Generating UI...</p>
+                <div class="flex-1 relative overflow-auto bg-gradient-to-br from-gray-50 to-gray-100">
+                    <iframe id="preview-frame" class="w-full h-full border-0" srcdoc="<html><body style='display:flex;height:100vh;align-items:center;justify-content:center;font-family:sans-serif;color:#999;background:linear-gradient(135deg,#f5f7fa,#c3cfe2);'><div style='text-align:center;'><h2 style='color:#333;margin:0;'>✨ AutoUI</h2><p style='color:#999;margin:10px 0 0;font-size:14px;'>Enter API key and describe a UI</p></div></body></html>"></iframe>
+                    
+                    <div id="loading-overlay" class="absolute inset-0 bg-white/80 backdrop-blur-sm hidden flex items-center justify-center z-50">
+                        <div class="text-center">
+                            <div class="loader rounded-full border-4 border-gray-300 border-t-blue-500 w-12 h-12 mx-auto mb-4"></div>
+                            <p class="text-gray-700 font-semibold">Generating...</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Toast -->
-    <div id="toast" class="fixed bottom-4 right-4 hidden toast bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg text-sm">
+    <div id="toast" class="fixed bottom-4 right-4 hidden toast bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg text-sm z-50">
         <i class="fa-solid fa-check mr-2"></i><span id="toast-message"></span>
     </div>
 
@@ -152,7 +171,6 @@
         
         let currentHtml = '';
 
-        // Tab switching
         chatTabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 const tabName = tab.dataset.tab;
@@ -167,7 +185,6 @@
             });
         });
 
-        // Example buttons
         exampleButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 promptInput.value = btn.dataset.example;
@@ -177,7 +194,6 @@
             });
         });
 
-        // Events
         sendBtn.addEventListener('click', handleGenerate);
         promptInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -201,7 +217,7 @@
             
             loadingOverlay.classList.remove('hidden');
             loadingOverlay.classList.add('flex');
-            previewStatus.innerHTML = '<i class="fa-solid fa-spinner text-yellow-500 text-xs mr-1 animate-spin"></i>Generating...';
+            previewStatus.innerHTML = '<i class="fa-solid fa-spinner text-yellow-500 text-xs mr-1" style="animation: spinner 1.5s linear infinite;"></i>Generating...';
 
             try {
                 const systemInstruction = `You are an expert frontend designer. Write clean, beautiful, responsive HTML using Tailwind CSS via CDN. 
@@ -224,7 +240,7 @@ ONLY return raw HTML. No markdown. Complete document ready for iframe.`;
                 
                 currentHtml = htmlCode;
                 previewFrame.srcdoc = htmlCode;
-                addChatMessage("✨ Generated! Copy or download the code.", 'agent');
+                addChatMessage("✨ Generated! Copy or download.", 'agent');
                 showToast('Success!');
                 previewStatus.innerHTML = '<i class="fa-solid fa-circle text-green-500 text-xs mr-1"></i>Ready';
                 
@@ -260,9 +276,7 @@ ONLY return raw HTML. No markdown. Complete document ready for iframe.`;
 
         function copyToClipboard() {
             if (!currentHtml) { showToast('Generate first'); return; }
-            navigator.clipboard.writeText(currentHtml).then(() => {
-                showToast('Copied!');
-            });
+            navigator.clipboard.writeText(currentHtml).then(() => showToast('Copied!'));
         }
 
         function downloadHtml() {
@@ -281,7 +295,6 @@ ONLY return raw HTML. No markdown. Complete document ready for iframe.`;
             setTimeout(() => toast.classList.add('hidden'), 2000);
         }
 
-        // LocalStorage for API key
         apiKeyInput.addEventListener('change', () => {
             localStorage.setItem('gemini_api_key', apiKeyInput.value);
         });
