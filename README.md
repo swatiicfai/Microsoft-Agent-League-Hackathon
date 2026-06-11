@@ -1,8 +1,8 @@
 # AutoUI - The Autonomous Frontend Designer Agent
 
-![AutoUI Banner](demo_assets/screen_00.png)
+AutoUI is an autonomous, AI-powered frontend designer agent built for the **Microsoft Agents League Hackathon**. It transforms plain English descriptions into beautiful, production-ready, fully-responsive HTML code with Tailwind CSS styling.
 
-AutoUI is an autonomous, AI-powered frontend designer agent built for the **Microsoft Agents League Hackathon**. It transforms plain English descriptions into beautiful, production-ready, fully-responsive user interfaces in seconds.
+---
 
 ## 🚀 Live Demo
 
@@ -29,21 +29,14 @@ Watch the full AutoUI demo with AI voiceover showing 3 completely different gene
 
 ---
 
-## 📸 Screenshots
+## 📸 Generated UI Examples
 
-Here are some real examples of what AutoUI can generate from a single prompt:
-
-### 1. Interactive Comic Website
-**Prompt:** *"Build an interactive comic website with dark theme and colorful panels"*
-![Comic Website UI](screenshots/comic.png)
-
-### 2. Neon Login Page
-**Prompt:** *"Build a dark login page with neon pink glow effects and glassmorphism card"*
-![Neon Login UI](screenshots/login.png)
-
-### 3. Beautiful Portfolio
-**Prompt:** *"Beautiful portfolio homepage"*
-![Portfolio UI](screenshots/portfolio.png)
+AutoUI can generate a wide variety of components and pages from simple text descriptions, including:
+- Interactive websites and dashboards
+- Login and authentication forms with modern effects
+- Portfolio and landing pages
+- Custom components with glassmorphism and neon styling
+- Fully responsive designs
 
 ---
 
@@ -72,4 +65,5 @@ You can run AutoUI locally using the included Python FastAPI backend:
 - **AI Model:** Google Gemini 2.5 Flash (`google-genai` SDK)
 
 ---
+
 *Built with ❤️ by Swati Gupta for the Microsoft Agents League Hackathon 2024*
