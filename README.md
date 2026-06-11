@@ -1,6 +1,6 @@
 # AutoUI - Autonomous Frontend Designer Agent
 
-> **Microsoft Agents League Hackathon 2024** | Creative Apps Category
+> **Microsoft Agents League Hackathon** | Creative Apps Category
 
 AutoUI is an autonomous, AI-powered frontend designer agent that transforms plain English descriptions into beautiful, production-ready, fully-responsive HTML code with Tailwind CSS styling. Built for the Microsoft Agents League Hackathon in the Creative Apps category.
 
@@ -296,12 +296,7 @@ MIT License - Feel free to use this project for personal, educational, and comme
 
 ## 🙏 Acknowledgments
 
-Built with ❤️ for the **Microsoft Agents League Hackathon 2024**
-
-- Powered by [Google Gemini API](https://ai.google.dev/)
-- UI Framework: [Tailwind CSS](https://tailwindcss.com/)
-- Backend: [FastAPI](https://fastapi.tiangolo.com/)
-- Icons: [Font Awesome](https://fontawesome.com/)
+Powered by [Google Gemini API](https://ai.google.dev/), [Tailwind CSS](https://tailwindcss.com/), [FastAPI](https://fastapi.tiangolo.com/), and [Font Awesome](https://fontawesome.com/)
 
 ---
 
