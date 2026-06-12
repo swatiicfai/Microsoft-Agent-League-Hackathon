@@ -399,17 +399,25 @@
         apiKeyEl.addEventListener('input', () => {
             const k = apiKeyEl.value.trim();
             if (k.length > 8) {
-                markKeyOk();
+                if (k.startsWith('AQ.')) {
+                    keyInd.textContent = '❌ Invalid format (must start with AIza)';
+                    keyInd.className = 'key-indicator no';
+                    keyInd.style.color = '#ef4444';
+                } else {
+                    markKeyOk();
+                }
                 localStorage.setItem('autoui-key', k);
             } else {
                 keyInd.textContent = 'No key';
                 keyInd.className = 'key-indicator no';
+                keyInd.style.color = '';
             }
         });
 
         function markKeyOk() {
             keyInd.textContent = '✓ Set';
             keyInd.className = 'key-indicator ok';
+            keyInd.style.color = '#4ade80';
         }
 
         // ── Example chips ─────────────────────────────────────────────
@@ -480,14 +488,12 @@ Requirements:
 User wants: ${prompt}`;
 
             try {
-                // Auto-detect key type: AQ. = Bearer token, else = ?key= param
-                const isBearer = key.startsWith('AQ.');
-                const url = isBearer
-                    ? 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent'
-                    : `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
+                if (key.startsWith('AQ.')) {
+                    throw new Error('You pasted an OAuth token. Please go to aistudio.google.com/app/apikey and click "Create API key". A real key starts with "AIza".');
+                }
 
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
                 const headers = { 'Content-Type': 'application/json' };
-                if (isBearer) headers['Authorization'] = 'Bearer ' + key;
 
                 const res = await fetch(url, {
                     method: 'POST',
@@ -500,9 +506,6 @@ User wants: ${prompt}`;
                 if (!res.ok) {
                     const err = await res.json().catch(() => ({}));
                     const msg = err?.error?.message || `HTTP Error ${res.status}`;
-                    if (res.status === 400 || res.status === 401 || res.status === 403) {
-                        throw new Error('Invalid API key. Please check and try again.');
-                    }
                     throw new Error(msg);
                 }
 
