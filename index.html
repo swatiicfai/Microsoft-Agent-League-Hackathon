@@ -3,536 +3,760 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoUI - AI Frontend Designer</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>AutoUI — Autonomous Frontend Designer Agent</title>
+    <meta name="description" content="AutoUI: Autonomous AI agent that generates stunning UIs from plain English. Microsoft Agents League Hackathon.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #080c14;
+            --surface: #0f1621;
+            --surface2: #141d2e;
+            --border: #1e2d45;
+            --text: #e2e8f0;
+            --muted: #64748b;
+            --accent: #3b82f6;
+            --purple: #7c3aed;
+            --green: #10b981;
+            --yellow: #f59e0b;
+            --red: #ef4444;
+        }
+
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #0f172a;
-            color: #fff;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             height: 100vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            font-size: 13px;
         }
 
-        /* NAV */
+        /* ── NAV ─────────────────────────────────────────────── */
         nav {
-            background: #1e293b;
-            border-bottom: 1px solid #334155;
-            padding: 12px 20px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0 20px;
+            height: 52px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-shrink: 0;
         }
-        .logo { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 700; }
-        .logo i { color: #60a5fa; }
-        .badge { font-size: 11px; background: #334155; padding: 2px 8px; border-radius: 20px; color: #94a3b8; }
-        .nav-btns { display: flex; gap: 8px; }
-        .btn { padding: 8px 14px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; }
-        .btn-copy { background: #334155; color: #fff; }
-        .btn-copy:hover { background: #475569; }
-        .btn-dl { background: #2563eb; color: #fff; }
-        .btn-dl:hover { background: #1d4ed8; }
-
-        /* MAIN */
-        main {
-            flex: 1;
+        .logo {
             display: flex;
-            overflow: hidden;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
+        .logo-icon {
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg, var(--accent), var(--purple));
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+        }
+        .logo-sub { font-size: 11px; color: var(--muted); font-weight: 400; }
+        .nav-badges { display: flex; gap: 8px; align-items: center; }
+        .badge {
+            font-size: 10px; font-weight: 600;
+            padding: 3px 10px; border-radius: 20px;
+            border: 1px solid;
+        }
+        .badge-ms { color: #60a5fa; border-color: #1e40af; background: #1e3a5f22; }
+        .badge-hack { color: #a78bfa; border-color: #5b21b6; background: #4c1d9522; }
+        .nav-actions { display: flex; gap: 8px; }
+        .btn {
+            padding: 7px 14px; border-radius: 7px; border: none;
+            cursor: pointer; font-size: 12px; font-weight: 600;
+            display: flex; align-items: center; gap: 6px;
+            transition: all 0.15s;
+        }
+        .btn-ghost { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+        .btn-ghost:hover { background: var(--border); }
+        .btn-primary { background: linear-gradient(135deg, var(--accent), var(--purple)); color: #fff; }
+        .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
 
-        /* SIDEBAR */
+        /* ── LAYOUT ──────────────────────────────────────────── */
+        main { flex: 1; display: flex; overflow: hidden; }
+
+        /* ── SIDEBAR ─────────────────────────────────────────── */
         aside {
-            width: 340px;
-            background: #1e293b;
-            border-right: 1px solid #334155;
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
+            width: 300px; flex-shrink: 0;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex; flex-direction: column;
             overflow-y: auto;
         }
-
-        .section { padding: 16px; border-bottom: 1px solid #334155; }
-        .section label {
-            display: block;
-            font-size: 11px;
-            font-weight: 700;
-            color: #94a3b8;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 8px;
+        .s-section { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+        .s-label {
+            font-size: 10px; font-weight: 700; color: var(--muted);
+            text-transform: uppercase; letter-spacing: 0.08em;
+            margin-bottom: 10px;
+            display: flex; align-items: center; gap: 6px;
         }
+        .s-label i { font-size: 10px; }
 
-        /* KEY INPUT */
-        .key-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #0f172a;
-            border: 2px solid #334155;
-            border-radius: 8px;
-            padding: 10px 12px;
+        .key-box {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--bg); border: 1.5px solid var(--border);
+            border-radius: 8px; padding: 9px 12px;
             transition: border-color 0.2s;
         }
-        .key-row:focus-within { border-color: #60a5fa; }
-        .key-row i { color: #fbbf24; font-size: 13px; flex-shrink: 0; }
-        .key-row input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            outline: none;
-            color: #fff;
-            font-size: 13px;
+        .key-box:focus-within { border-color: var(--accent); }
+        .key-box i { color: var(--yellow); font-size: 12px; flex-shrink: 0; }
+        .key-box input {
+            flex: 1; background: transparent; border: none; outline: none;
+            color: var(--text); font-size: 12px; font-family: 'JetBrains Mono', monospace;
             min-width: 0;
         }
-        .key-row input::placeholder { color: #475569; }
-        .key-indicator { font-size: 11px; font-weight: 700; flex-shrink: 0; }
-        .key-indicator.ok { color: #4ade80; }
-        .key-indicator.no { color: #64748b; }
+        .key-box input::placeholder { color: var(--muted); font-family: 'Inter', sans-serif; }
+        .key-status { font-size: 10px; font-weight: 700; flex-shrink: 0; }
+        .key-status.ok { color: var(--green); }
+        .key-status.no { color: var(--muted); }
+        .key-hint { margin-top: 7px; font-size: 11px; color: var(--muted); line-height: 1.6; }
+        .key-hint a { color: var(--accent); text-decoration: none; }
 
-        .key-hint {
-            margin-top: 8px;
-            font-size: 11px;
-            color: #64748b;
-            line-height: 1.5;
-        }
-        .key-hint a { color: #60a5fa; text-decoration: none; }
-        .key-hint a:hover { text-decoration: underline; }
-
-        /* PROMPT */
         textarea {
-            width: 100%;
-            background: #0f172a;
-            border: 2px solid #334155;
-            border-radius: 8px;
-            padding: 10px 12px;
-            color: #fff;
-            font-size: 13px;
-            font-family: 'Segoe UI', sans-serif;
-            resize: none;
-            outline: none;
-            transition: border-color 0.2s;
-            line-height: 1.5;
+            width: 100%; background: var(--bg); border: 1.5px solid var(--border);
+            border-radius: 8px; padding: 10px 12px; color: var(--text);
+            font-size: 13px; font-family: 'Inter', sans-serif;
+            resize: none; outline: none; transition: border-color 0.2s; line-height: 1.6;
         }
-        textarea:focus { border-color: #60a5fa; }
-        textarea::placeholder { color: #475569; }
+        textarea:focus { border-color: var(--accent); }
+        textarea::placeholder { color: var(--muted); }
 
-        /* GENERATE BTN */
         .btn-generate {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: opacity 0.2s;
-            margin-top: 10px;
+            width: 100%; padding: 11px; margin-top: 10px;
+            background: linear-gradient(135deg, var(--accent), var(--purple));
+            color: #fff; border: none; border-radius: 8px;
+            font-size: 14px; font-weight: 700; cursor: pointer;
+            transition: all 0.2s; display: flex; align-items: center;
+            justify-content: center; gap: 8px;
         }
-        .btn-generate:hover { opacity: 0.9; }
+        .btn-generate:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
         .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* EXAMPLES */
-        .examples { display: flex; flex-direction: column; gap: 6px; }
-        .example-chip {
-            padding: 8px 10px;
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 6px;
-            font-size: 12px;
-            color: #94a3b8;
-            cursor: pointer;
-            text-align: left;
-            transition: 0.2s;
+        .example-btn {
+            width: 100%; text-align: left; background: var(--bg);
+            border: 1px solid var(--border); border-radius: 6px;
+            padding: 8px 10px; color: var(--muted); font-size: 12px;
+            cursor: pointer; transition: all 0.15s; margin-bottom: 5px;
+            display: flex; align-items: center; gap: 7px;
         }
-        .example-chip:hover { border-color: #60a5fa; color: #fff; background: #1e3a5f; }
+        .example-btn:hover { border-color: var(--accent); color: var(--text); background: #1e3a5f22; }
+        .example-btn i { color: var(--accent); font-size: 10px; flex-shrink: 0; }
 
-        /* STATUS */
-        .status-row {
-            padding: 10px 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: #94a3b8;
+        /* Foundry toggle */
+        .toggle-row {
+            display: flex; align-items: center;
+            justify-content: space-between; padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
         }
-        .dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; }
-        .dot.spinning { background: #60a5fa; animation: pulse 1s infinite; }
-        .dot.error { background: #f87171; }
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+        .toggle-lbl { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 7px; }
+        .toggle-lbl i { color: var(--purple); }
+        .sw { position: relative; width: 34px; height: 18px; cursor: pointer; }
+        .sw input { opacity: 0; width: 0; height: 0; }
+        .sw-track {
+            position: absolute; inset: 0;
+            background: var(--border); border-radius: 18px; transition: 0.25s;
+        }
+        .sw-track:before {
+            content: ''; position: absolute;
+            width: 12px; height: 12px; left: 3px; top: 3px;
+            background: #fff; border-radius: 50%; transition: 0.25s;
+        }
+        .sw input:checked + .sw-track { background: var(--purple); }
+        .sw input:checked + .sw-track:before { transform: translateX(16px); }
 
-        /* PREVIEW */
-        .preview-pane {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+        /* ── AGENT PANEL ─────────────────────────────────────── */
+        .agent-panel {
+            width: 340px; flex-shrink: 0;
+            background: var(--surface2);
+            border-right: 1px solid var(--border);
+            display: flex; flex-direction: column;
             overflow: hidden;
         }
-        .preview-bar {
-            background: #1e293b;
-            border-bottom: 1px solid #334155;
-            padding: 8px 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .agent-header {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 8px;
             flex-shrink: 0;
         }
-        .traffic { display: flex; gap: 6px; }
-        .traffic span { width: 12px; height: 12px; border-radius: 50%; }
-        .traffic .r { background: #ef4444; }
-        .traffic .y { background: #eab308; }
-        .traffic .g { background: #22c55e; }
-        .preview-label { font-size: 12px; color: #64748b; margin-left: 4px; }
-        iframe {
-            flex: 1;
-            border: none;
-            background: #fff;
+        .agent-header-icon {
+            width: 28px; height: 28px;
+            background: linear-gradient(135deg, #1d4ed8, #6d28d9);
+            border-radius: 6px; display: flex;
+            align-items: center; justify-content: center;
+            font-size: 13px; flex-shrink: 0;
+        }
+        .agent-header-title { font-weight: 700; font-size: 13px; }
+        .agent-header-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+        .agent-steps { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+
+        .step-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 10px; overflow: hidden;
+            transition: border-color 0.3s;
+        }
+        .step-card.active { border-color: var(--accent); }
+        .step-card.done { border-color: var(--green); }
+        .step-card.error { border-color: var(--red); }
+
+        .step-head {
+            display: flex; align-items: center; gap: 10px;
+            padding: 11px 14px;
+        }
+        .step-num {
+            width: 26px; height: 26px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 700; flex-shrink: 0;
+            background: var(--surface2); color: var(--muted); border: 1.5px solid var(--border);
+            transition: all 0.3s;
+        }
+        .step-card.active .step-num { background: #1e3a5f; color: var(--accent); border-color: var(--accent); }
+        .step-card.done .step-num { background: #064e3b; color: var(--green); border-color: var(--green); }
+        .step-card.error .step-num { background: #450a0a; color: var(--red); border-color: var(--red); }
+
+        .step-info { flex: 1; }
+        .step-title { font-weight: 600; font-size: 12px; }
+        .step-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+        .step-badge {
+            font-size: 10px; font-weight: 700; padding: 2px 8px;
+            border-radius: 20px; flex-shrink: 0;
+        }
+        .step-badge.idle { background: var(--surface2); color: var(--muted); }
+        .step-badge.running { background: #1e3a5f; color: var(--accent); animation: pulse 1.2s infinite; }
+        .step-badge.done { background: #064e3b; color: var(--green); }
+        .step-badge.error { background: #450a0a; color: var(--red); }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+        .step-output {
+            padding: 0 14px 12px;
+            font-size: 11px; color: #94a3b8;
+            line-height: 1.6;
+            display: none;
+            font-family: 'JetBrains Mono', monospace;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .step-output.show { display: block; }
+
+        /* Quality Score */
+        .quality-bar {
+            margin: 8px 14px 12px;
+            display: none;
+        }
+        .quality-bar.show { display: block; }
+        .quality-label {
+            display: flex; justify-content: space-between;
+            font-size: 11px; margin-bottom: 5px;
+        }
+        .quality-track {
+            height: 6px; background: var(--surface2); border-radius: 10px; overflow: hidden;
+        }
+        .quality-fill {
+            height: 100%; background: linear-gradient(90deg, var(--accent), var(--green));
+            border-radius: 10px; transition: width 1s ease;
+            width: 0;
         }
 
-        /* LOADING OVERLAY */
-        #loading-overlay {
-            display: none;
-            position: absolute;
-            inset: 0;
-            background: rgba(15,23,42,0.85);
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 12px;
-            z-index: 10;
+        /* Overall status */
+        .agent-status {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            display: flex; align-items: center; gap: 8px;
+            font-size: 12px; color: var(--muted);
+            flex-shrink: 0;
         }
-        #loading-overlay.show { display: flex; }
+        .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+        .status-dot.spinning { background: var(--accent); animation: pulse 1s infinite; }
+        .status-dot.error { background: var(--red); }
+
+        /* ── PREVIEW ─────────────────────────────────────────── */
+        .preview-pane {
+            flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative;
+        }
+        .preview-bar {
+            background: var(--surface); border-bottom: 1px solid var(--border);
+            padding: 8px 14px; display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+        }
+        .traffic { display: flex; gap: 5px; }
+        .traffic span { width: 11px; height: 11px; border-radius: 50%; }
+        .traffic .r { background: #ef4444; }
+        .traffic .y { background: #f59e0b; }
+        .traffic .g { background: #22c55e; }
+        .preview-label { font-size: 11px; color: var(--muted); }
+        .preview-label span { color: var(--text); font-weight: 600; }
+        iframe { flex: 1; border: none; background: #fff; }
+
+        /* Loading overlay */
+        #overlay {
+            display: none; position: absolute; inset: 0;
+            background: rgba(8,12,20,0.75); backdrop-filter: blur(4px);
+            align-items: center; justify-content: center; flex-direction: column;
+            gap: 14px; z-index: 10;
+        }
+        #overlay.show { display: flex; }
         .spinner {
-            width: 48px; height: 48px;
-            border: 4px solid #1e40af;
-            border-top-color: #60a5fa;
+            width: 44px; height: 44px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        #loading-overlay p { color: #94a3b8; font-size: 14px; }
+        #overlay p { color: var(--muted); font-size: 13px; }
 
-        /* TOAST */
+        /* Toast */
         #toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #1e293b;
-            border: 1px solid #334155;
-            color: #fff;
-            padding: 12px 20px;
-            border-radius: 10px;
-            font-size: 13px;
-            display: none;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            z-index: 999;
+            position: fixed; bottom: 20px; right: 20px;
+            background: var(--surface); border: 1px solid var(--border);
+            padding: 11px 18px; border-radius: 10px; font-size: 12px;
+            display: none; align-items: center; gap: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5); z-index: 999;
         }
         #toast.show { display: flex; }
-        #toast i { color: #4ade80; }
 
-        /* TOGGLE */
-        .toggle-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 16px;
-            border-bottom: 1px solid #334155;
-        }
-        .toggle-label { font-size: 12px; color: #94a3b8; display: flex; align-items: center; gap: 6px; }
-        .toggle { position: relative; width: 36px; height: 20px; cursor: pointer; }
-        .toggle input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; inset: 0;
-            background: #334155; border-radius: 20px;
-            transition: 0.3s;
-        }
-        .slider:before {
-            content: '';
-            position: absolute;
-            width: 14px; height: 14px;
-            left: 3px; top: 3px;
-            background: #fff; border-radius: 50%;
-            transition: 0.3s;
-        }
-        input:checked + .slider { background: #7c3aed; }
-        input:checked + .slider:before { transform: translateX(16px); }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+        @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+        .step-card { animation: fadeIn 0.3s ease; }
     </style>
 </head>
 <body>
 
-    <!-- NAV -->
-    <nav>
-        <div class="logo">
-            <i class="fa-solid fa-wand-magic-sparkles"></i>
+<!-- NAV -->
+<nav>
+    <div class="logo">
+        <div class="logo-icon">✨</div>
+        <div>
             AutoUI
-            <span class="badge">by Swati Gupta</span>
+            <div class="logo-sub">Autonomous Frontend Designer Agent</div>
         </div>
-        <div class="nav-btns">
-            <button class="btn btn-copy" id="copy-btn"><i class="fa-solid fa-copy"></i> Copy</button>
-            <button class="btn btn-dl" id="dl-btn"><i class="fa-solid fa-download"></i> Download</button>
+    </div>
+    <div class="nav-badges">
+        <span class="badge badge-ms"><i class="fa-brands fa-microsoft"></i> Microsoft Agents League</span>
+        <span class="badge badge-hack">🏆 Hackathon 2025</span>
+    </div>
+    <div class="nav-actions">
+        <button class="btn btn-ghost" id="copy-btn"><i class="fa-solid fa-copy"></i> Copy HTML</button>
+        <button class="btn btn-ghost" id="dl-btn"><i class="fa-solid fa-download"></i> Download</button>
+    </div>
+</nav>
+
+<!-- MAIN -->
+<main>
+
+    <!-- SIDEBAR: Input -->
+    <aside>
+        <!-- API KEY -->
+        <div class="s-section">
+            <div class="s-label"><i class="fa-solid fa-key"></i> Gemini API Key</div>
+            <div class="key-box">
+                <i class="fa-solid fa-key"></i>
+                <input type="text" id="api-key" placeholder="Paste your API key..." autocomplete="off" spellcheck="false">
+                <span class="key-status no" id="key-status">No key</span>
+            </div>
+            <p class="key-hint">
+                Free key at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a>
+                → Create API key → Copy & paste above
+            </p>
         </div>
-    </nav>
 
-    <!-- MAIN -->
-    <main>
-        <!-- SIDEBAR -->
-        <aside>
+        <!-- PROMPT -->
+        <div class="s-section">
+            <div class="s-label"><i class="fa-solid fa-pen-nib"></i> Describe Your UI</div>
+            <textarea id="prompt" rows="5" placeholder="E.g. Dark login page with neon glow effects and animated background..."></textarea>
+            <button class="btn-generate" id="gen-btn">
+                <i class="fa-solid fa-robot"></i> Run Agent Pipeline
+            </button>
+        </div>
 
-            <!-- API KEY -->
-            <div class="section">
-                <label><i class="fa-solid fa-key" style="color:#fbbf24;margin-right:5px"></i>Gemini API Key</label>
-                <div class="key-row">
-                    <i class="fa-solid fa-key"></i>
-                    <input type="text" id="api-key" placeholder="Paste your API key here..." autocomplete="off" spellcheck="false">
-                    <span class="key-indicator no" id="key-ind">No key</span>
-                </div>
-                <p class="key-hint">
-                    Get a free key at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a>
-                    → Click <strong style="color:#fff">"Create API key"</strong> → Copy → Paste above
-                </p>
-            </div>
+        <!-- EXAMPLES -->
+        <div class="s-section">
+            <div class="s-label"><i class="fa-solid fa-bolt"></i> Quick Examples</div>
+            <button class="example-btn"><i class="fa-solid fa-right-to-bracket"></i>Dark login with neon glow effects</button>
+            <button class="example-btn"><i class="fa-solid fa-chart-line"></i>Analytics dashboard with charts & stats</button>
+            <button class="example-btn"><i class="fa-solid fa-rocket"></i>SaaS landing page with pricing table</button>
+            <button class="example-btn"><i class="fa-solid fa-briefcase"></i>Portfolio with animated hero section</button>
+            <button class="example-btn"><i class="fa-solid fa-store"></i>E-commerce grid with filter sidebar</button>
+        </div>
 
-            <!-- PROMPT -->
-            <div class="section">
-                <label><i class="fa-solid fa-pen-nib" style="margin-right:5px;color:#a78bfa"></i>Describe Your UI</label>
-                <textarea id="prompt" rows="5" placeholder="E.g. Dark login page with neon glow effects and glassmorphism card..."></textarea>
-                <button class="btn-generate" id="gen-btn">
-                    <i class="fa-solid fa-wand-magic-sparkles" style="margin-right:6px"></i>Generate UI
-                </button>
-            </div>
+        <!-- FOUNDRY TOGGLE -->
+        <div class="toggle-row">
+            <span class="toggle-lbl">
+                <i class="fa-solid fa-brain"></i>
+                Foundry IQ Style Guide
+            </span>
+            <label class="sw">
+                <input type="checkbox" id="foundry" checked>
+                <span class="sw-track"></span>
+            </label>
+        </div>
 
-            <!-- EXAMPLES -->
-            <div class="section">
-                <label>Quick Examples</label>
-                <div class="examples">
-                    <button class="example-chip">Dark login page with neon glow effects</button>
-                    <button class="example-chip">Analytics dashboard with charts and stats</button>
-                    <button class="example-chip">SaaS landing page with pricing table</button>
-                    <button class="example-chip">Portfolio with animated hero section</button>
-                    <button class="example-chip">E-commerce product grid with filters</button>
-                </div>
-            </div>
+        <!-- STATUS -->
+        <div class="agent-status">
+            <div class="status-dot" id="main-dot"></div>
+            <span id="main-status">Ready — Run agent pipeline to generate UI</span>
+        </div>
+    </aside>
 
-            <!-- FOUNDRY TOGGLE -->
-            <div class="toggle-row">
-                <span class="toggle-label">
-                    <i class="fa-solid fa-brain" style="color:#a78bfa"></i>
-                    Foundry IQ Style Guide
-                </span>
-                <label class="toggle">
-                    <input type="checkbox" id="foundry" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-
-            <!-- STATUS -->
-            <div class="status-row">
-                <div class="dot" id="dot"></div>
-                <span id="status-text">Ready</span>
-            </div>
-
-        </aside>
-
-        <!-- PREVIEW -->
-        <div class="preview-pane" style="position:relative">
-            <div class="preview-bar">
-                <div class="traffic">
-                    <span class="r"></span>
-                    <span class="y"></span>
-                    <span class="g"></span>
-                </div>
-                <span class="preview-label">Live Preview</span>
-            </div>
-            <iframe id="preview" srcdoc="
-                <html><body style='margin:0;min-height:100vh;display:flex;align-items:center;
-                justify-content:center;background:linear-gradient(135deg,#0f172a,#1e293b);
-                font-family:Segoe UI,sans-serif;'>
-                <div style='text-align:center;color:#fff;'>
-                    <div style='font-size:3rem;margin-bottom:12px'>✨</div>
-                    <h1 style='font-size:1.6rem;font-weight:700;margin:0 0 8px'>AutoUI Ready</h1>
-                    <p style='color:#94a3b8;font-size:0.9rem;margin:0'>Paste your API key and describe a UI to get started</p>
-                </div></body></html>">
-            </iframe>
-            <div id="loading-overlay">
-                <div class="spinner"></div>
-                <p>AI is designing your UI...</p>
+    <!-- AGENT PIPELINE PANEL -->
+    <div class="agent-panel">
+        <div class="agent-header">
+            <div class="agent-header-icon">🤖</div>
+            <div>
+                <div class="agent-header-title">Agent Reasoning Pipeline</div>
+                <div class="agent-header-sub">3-step autonomous design process</div>
             </div>
         </div>
-    </main>
 
-    <!-- TOAST -->
-    <div id="toast"><i class="fa-solid fa-circle-check"></i><span id="toast-msg"></span></div>
+        <div class="agent-steps">
 
-    <script>
-        // ── Elements ──────────────────────────────────────────────────
-        const apiKeyEl   = document.getElementById('api-key');
-        const keyInd     = document.getElementById('key-ind');
-        const promptEl   = document.getElementById('prompt');
-        const genBtn     = document.getElementById('gen-btn');
-        const copyBtn    = document.getElementById('copy-btn');
-        const dlBtn      = document.getElementById('dl-btn');
-        const preview    = document.getElementById('preview');
-        const loading    = document.getElementById('loading-overlay');
-        const dot        = document.getElementById('dot');
-        const statusTxt  = document.getElementById('status-text');
-        const foundry    = document.getElementById('foundry');
-        const toast      = document.getElementById('toast');
-        const toastMsg   = document.getElementById('toast-msg');
+            <!-- STEP 1 -->
+            <div class="step-card" id="step1-card">
+                <div class="step-head">
+                    <div class="step-num" id="step1-num">1</div>
+                    <div class="step-info">
+                        <div class="step-title">🧠 Design Planner Agent</div>
+                        <div class="step-sub">Analyzes prompt → creates design brief</div>
+                    </div>
+                    <span class="step-badge idle" id="step1-badge">Idle</span>
+                </div>
+                <div class="step-output" id="step1-out"></div>
+            </div>
 
-        let generatedHtml = '';
+            <!-- STEP 2 -->
+            <div class="step-card" id="step2-card">
+                <div class="step-head">
+                    <div class="step-num" id="step2-num">2</div>
+                    <div class="step-info">
+                        <div class="step-title">💻 Code Writer Agent</div>
+                        <div class="step-sub">Generates HTML from design brief</div>
+                    </div>
+                    <span class="step-badge idle" id="step2-badge">Idle</span>
+                </div>
+                <div class="step-output" id="step2-out"></div>
+            </div>
 
-        // ── Restore saved key ─────────────────────────────────────────
-        const savedKey = localStorage.getItem('autoui-key') || '';
-        if (savedKey) {
-            apiKeyEl.value = savedKey;
-            markKeyOk();
-        }
+            <!-- STEP 3 -->
+            <div class="step-card" id="step3-card">
+                <div class="step-head">
+                    <div class="step-num" id="step3-num">3</div>
+                    <div class="step-info">
+                        <div class="step-title">🔍 Quality Reviewer Agent</div>
+                        <div class="step-sub">Reviews output → scores quality</div>
+                    </div>
+                    <span class="step-badge idle" id="step3-badge">Idle</span>
+                </div>
+                <div class="step-output" id="step3-out"></div>
+                <div class="quality-bar" id="quality-bar">
+                    <div class="quality-label">
+                        <span>Quality Score</span>
+                        <span id="quality-score">—</span>
+                    </div>
+                    <div class="quality-track">
+                        <div class="quality-fill" id="quality-fill"></div>
+                    </div>
+                </div>
+            </div>
 
-        // ── Key input listener ────────────────────────────────────────
-        apiKeyEl.addEventListener('input', () => {
-            const k = apiKeyEl.value.trim();
-            if (k.length > 20) {
-                markKeyOk();
-                localStorage.setItem('autoui-key', k);
-            } else {
-                keyInd.textContent = 'No key';
-                keyInd.className = 'key-indicator no';
-                keyInd.style.color = '';
+        </div>
+    </div>
+
+    <!-- PREVIEW PANE -->
+    <div class="preview-pane">
+        <div class="preview-bar">
+            <div class="traffic">
+                <span class="r"></span><span class="y"></span><span class="g"></span>
+            </div>
+            <span class="preview-label">Live Preview — <span id="preview-label-text">Waiting for generation</span></span>
+        </div>
+        <iframe id="preview" srcdoc="
+            <html><body style='margin:0;min-height:100vh;display:flex;align-items:center;
+            justify-content:center;background:linear-gradient(135deg,#080c14,#0f1621);
+            font-family:Inter,sans-serif;'>
+            <div style='text-align:center;color:#fff;padding:40px;'>
+                <div style='font-size:3.5rem;margin-bottom:16px'>🤖</div>
+                <h1 style='font-size:1.8rem;font-weight:800;margin:0 0 10px;background:linear-gradient(135deg,#3b82f6,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent'>AutoUI Agent</h1>
+                <p style='color:#64748b;font-size:0.95rem;margin:0 0 8px'>Add your API key and describe a UI</p>
+                <p style='color:#475569;font-size:0.85rem;margin:0'>Then click <strong style=color:#3b82f6>Run Agent Pipeline</strong></p>
+            </div></body></html>">
+        </iframe>
+        <div id="overlay">
+            <div class="spinner"></div>
+            <p id="overlay-text">Agent is working...</p>
+        </div>
+    </div>
+
+</main>
+
+<!-- TOAST -->
+<div id="toast"><span id="toast-msg"></span></div>
+
+<script>
+// ── Elements ───────────────────────────────────────────────────────
+const apiKeyEl  = document.getElementById('api-key');
+const keyStatus = document.getElementById('key-status');
+const promptEl  = document.getElementById('prompt');
+const genBtn    = document.getElementById('gen-btn');
+const copyBtn   = document.getElementById('copy-btn');
+const dlBtn     = document.getElementById('dl-btn');
+const preview   = document.getElementById('preview');
+const overlay   = document.getElementById('overlay');
+const overlayTxt= document.getElementById('overlay-text');
+const mainDot   = document.getElementById('main-dot');
+const mainStat  = document.getElementById('main-status');
+const previewLbl= document.getElementById('preview-label-text');
+const foundry   = document.getElementById('foundry');
+const toast     = document.getElementById('toast');
+const toastMsg  = document.getElementById('toast-msg');
+
+let generatedHtml = '';
+
+// ── Restore key ────────────────────────────────────────────────────
+const saved = localStorage.getItem('autoui-key') || '';
+if (saved) { apiKeyEl.value = saved; markKeyOk(); }
+
+apiKeyEl.addEventListener('input', () => {
+    const k = apiKeyEl.value.trim();
+    if (k.length > 20) { markKeyOk(); localStorage.setItem('autoui-key', k); }
+    else { keyStatus.textContent = 'No key'; keyStatus.className = 'key-status no'; }
+});
+function markKeyOk() {
+    keyStatus.textContent = '✓ Set';
+    keyStatus.className = 'key-status ok';
+}
+
+// ── Example chips ──────────────────────────────────────────────────
+document.querySelectorAll('.example-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        promptEl.value = btn.textContent.trim();
+        promptEl.focus();
+    });
+});
+
+// ── Copy / Download ────────────────────────────────────────────────
+copyBtn.addEventListener('click', () => {
+    if (!generatedHtml) { showToast('⚠️ Generate a UI first!'); return; }
+    navigator.clipboard.writeText(generatedHtml).then(() => showToast('✅ HTML copied to clipboard!'));
+});
+dlBtn.addEventListener('click', () => {
+    if (!generatedHtml) { showToast('⚠️ Generate a UI first!'); return; }
+    const a = document.createElement('a');
+    a.href = 'data:text/html;charset=utf-8,' + encodeURIComponent(generatedHtml);
+    a.download = 'autoui-output.html';
+    a.click();
+    showToast('✅ Downloaded!');
+});
+
+// ── Step helpers ───────────────────────────────────────────────────
+function setStep(n, state, text) {
+    const card  = document.getElementById(`step${n}-card`);
+    const badge = document.getElementById(`step${n}-badge`);
+    const out   = document.getElementById(`step${n}-out`);
+
+    card.className = 'step-card ' + (state === 'running' ? 'active' : state === 'done' ? 'done' : state === 'error' ? 'error' : '');
+    badge.className = 'step-badge ' + (state || 'idle');
+    badge.textContent = state === 'running' ? 'Running...' : state === 'done' ? '✓ Done' : state === 'error' ? '✗ Error' : 'Idle';
+
+    if (text) {
+        out.textContent = text;
+        out.classList.add('show');
+    } else {
+        out.classList.remove('show');
+    }
+}
+
+function resetSteps() {
+    [1, 2, 3].forEach(n => setStep(n, '', ''));
+    document.getElementById('quality-bar').classList.remove('show');
+    document.getElementById('quality-score').textContent = '—';
+    document.getElementById('quality-fill').style.width = '0';
+}
+
+// ── Gemini API call ────────────────────────────────────────────────
+async function callGemini(key, prompt) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
+    const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err?.error?.message || `HTTP ${res.status}`);
+    }
+    const data = await res.json();
+    return data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+}
+
+// ── MAIN PIPELINE ──────────────────────────────────────────────────
+genBtn.addEventListener('click', runPipeline);
+promptEl.addEventListener('keydown', e => { if (e.key === 'Enter' && e.ctrlKey) runPipeline(); });
+
+async function runPipeline() {
+    const key = apiKeyEl.value.trim();
+    const userPrompt = promptEl.value.trim();
+
+    if (!key) {
+        apiKeyEl.focus();
+        apiKeyEl.parentElement.style.borderColor = 'var(--red)';
+        setTimeout(() => apiKeyEl.parentElement.style.borderColor = '', 2000);
+        showToast('⚠️ Please add your API key first!');
+        return;
+    }
+    if (!userPrompt) {
+        promptEl.focus();
+        showToast('⚠️ Please describe a UI first!');
+        return;
+    }
+
+    // Reset state
+    resetSteps();
+    genBtn.disabled = true;
+    genBtn.innerHTML = '<i class="fa-solid fa-spinner" style="animation:spin 1s linear infinite"></i> Agent Running...';
+    overlay.classList.add('show');
+    mainDot.className = 'status-dot spinning';
+
+    const foundryGuide = foundry.checked
+        ? '\nDesign Style: dark premium UI, glassmorphism cards, blue-purple gradient accents (#3b82f6, #7c3aed), smooth hover animations, Microsoft Fluent design inspiration, clean typography.\n'
+        : '';
+
+    try {
+        // ── STEP 1: Design Planner Agent ───────────────────────
+        setStep(1, 'running', '');
+        mainStat.textContent = 'Step 1/3 — Design Planner analyzing prompt...';
+        overlayTxt.textContent = 'Step 1: Design Planner Agent is analyzing your prompt...';
+
+        const plannerPrompt = `You are a senior UI/UX Design Planner Agent.
+Analyze the following UI request and produce a concise design brief in 5-8 bullet points.
+Cover: layout structure, color palette, key components, typography, interactions/animations.
+Be specific and technical. No code. Plain text bullets only.
+${foundryGuide}
+User Request: "${userPrompt}"`;
+
+        const designBrief = await callGemini(key, plannerPrompt);
+        setStep(1, 'done', '📋 Design Brief:\n\n' + designBrief.trim());
+
+        // ── STEP 2: Code Writer Agent ──────────────────────────
+        setStep(2, 'running', '');
+        mainStat.textContent = 'Step 2/3 — Code Writer generating HTML...';
+        overlayTxt.textContent = 'Step 2: Code Writer Agent is generating the HTML...';
+
+        const coderPrompt = `You are an expert Frontend Code Writer Agent.
+Using the design brief below, generate a complete, stunning, production-ready HTML page.
+
+DESIGN BRIEF:
+${designBrief}
+
+ORIGINAL REQUEST: "${userPrompt}"
+
+RULES:
+- Include <script src="https://cdn.tailwindcss.com"><\/script> in <head>
+- Include <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"> in <head>
+- Include <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"> in <head>
+- Return ONLY raw HTML. No markdown, no code fences, no explanations.
+- Make it visually STUNNING with real content (no lorem ipsum).
+- Add smooth CSS animations and hover effects.
+${foundryGuide}`;
+
+        let html = await callGemini(key, coderPrompt);
+        html = html.replace(/^```html\s*/i, '').replace(/^```\s*/i, '').replace(/```$/i, '').trim();
+        if (!html) throw new Error('No HTML received from Code Writer Agent');
+
+        generatedHtml = html;
+        setStep(2, 'done', '✅ HTML generated successfully (' + html.length.toLocaleString() + ' characters)');
+
+        // ── STEP 3: Quality Reviewer Agent ─────────────────────
+        setStep(3, 'running', '');
+        mainStat.textContent = 'Step 3/3 — Quality Reviewer checking output...';
+        overlayTxt.textContent = 'Step 3: Quality Reviewer Agent is scoring the output...';
+
+        const reviewerPrompt = `You are a Quality Reviewer Agent for frontend UI code.
+Review this generated HTML page and provide:
+1. A quality score from 0-100
+2. 3 specific strengths
+3. 1-2 suggestions for improvement
+
+Original request: "${userPrompt}"
+
+Generated HTML (first 2000 chars):
+${html.substring(0, 2000)}
+
+Respond in this EXACT format:
+SCORE: [number]
+STRENGTHS:
+- [strength 1]
+- [strength 2]  
+- [strength 3]
+SUGGESTIONS:
+- [suggestion 1]`;
+
+        const review = await callGemini(key, reviewerPrompt);
+
+        // Parse score
+        const scoreMatch = review.match(/SCORE:\s*(\d+)/i);
+        const score = scoreMatch ? parseInt(scoreMatch[1]) : 75;
+
+        setStep(3, 'done', '📊 Review Complete:\n\n' + review.trim());
+
+        // Show quality bar
+        const qBar = document.getElementById('quality-bar');
+        const qScore = document.getElementById('quality-score');
+        const qFill = document.getElementById('quality-fill');
+        qBar.classList.add('show');
+        qScore.textContent = score + '/100';
+        setTimeout(() => { qFill.style.width = score + '%'; }, 100);
+
+        // Render preview
+        preview.srcdoc = html;
+        previewLbl.textContent = userPrompt.slice(0, 50) + (userPrompt.length > 50 ? '...' : '');
+
+        mainDot.className = 'status-dot';
+        mainStat.textContent = `✅ Done! Quality score: ${score}/100`;
+        showToast('✨ UI generated! Score: ' + score + '/100');
+
+    } catch (err) {
+        console.error(err);
+        // Mark current running step as error
+        [1, 2, 3].forEach(n => {
+            if (document.getElementById(`step${n}-badge`).textContent === 'Running...') {
+                setStep(n, 'error', '❌ Error: ' + err.message);
             }
         });
+        mainDot.className = 'status-dot error';
+        mainStat.textContent = '❌ Error: ' + err.message;
+        showToast('❌ ' + err.message);
+    } finally {
+        genBtn.disabled = false;
+        genBtn.innerHTML = '<i class="fa-solid fa-robot"></i> Run Agent Pipeline';
+        overlay.classList.remove('show');
+    }
+}
 
-        function markKeyOk() {
-            keyInd.textContent = '✓ Set';
-            keyInd.className = 'key-indicator ok';
-            keyInd.style.color = '#4ade80';
-        }
-
-        // ── Example chips ─────────────────────────────────────────────
-        document.querySelectorAll('.example-chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                promptEl.value = chip.textContent.trim();
-                promptEl.focus();
-            });
-        });
-
-        // ── Copy / Download ───────────────────────────────────────────
-        copyBtn.addEventListener('click', () => {
-            if (!generatedHtml) { showToast('Generate a UI first!'); return; }
-            navigator.clipboard.writeText(generatedHtml).then(() => showToast('HTML copied!'));
-        });
-
-        dlBtn.addEventListener('click', () => {
-            if (!generatedHtml) { showToast('Generate a UI first!'); return; }
-            const a = document.createElement('a');
-            a.href = 'data:text/html;charset=utf-8,' + encodeURIComponent(generatedHtml);
-            a.download = 'autoui.html';
-            a.click();
-            showToast('Downloaded!');
-        });
-
-        // ── Generate ──────────────────────────────────────────────────
-        genBtn.addEventListener('click', generate);
-        promptEl.addEventListener('keydown', e => {
-            if (e.key === 'Enter' && e.ctrlKey) generate();
-        });
-
-        async function generate() {
-            const key    = apiKeyEl.value.trim();
-            const prompt = promptEl.value.trim();
-
-            if (!key) {
-                apiKeyEl.focus();
-                showToast('⚠️ Please paste your API key first!');
-                apiKeyEl.parentElement.style.borderColor = '#f87171';
-                setTimeout(() => apiKeyEl.parentElement.style.borderColor = '', 2000);
-                return;
-            }
-            if (!prompt) {
-                promptEl.focus();
-                showToast('⚠️ Please describe a UI first!');
-                return;
-            }
-
-            // UI: loading state
-            genBtn.disabled = true;
-            genBtn.innerHTML = '<i class="fa-solid fa-spinner" style="animation:spin 1s linear infinite;margin-right:6px"></i>Generating...';
-            loading.classList.add('show');
-            dot.className = 'dot spinning';
-            statusTxt.textContent = 'Generating...';
-
-            const styleGuide = foundry.checked
-                ? '\nStyle: dark premium UI, glassmorphism cards, blue-purple gradient accents, smooth animations, Fluent design inspiration.\n'
-                : '';
-
-            const sysPrompt = `You are a world-class frontend UI designer.
-Generate a complete, stunning, production-ready HTML page.
-Requirements:
-- Include <script src="https://cdn.tailwindcss.com"><\/script> in the <head>
-- Include <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"> in the <head>
-- Return ONLY valid raw HTML. No markdown. No code fences. No explanations.
-- Make it visually stunning with real content (no lorem ipsum).${styleGuide}
-
-User wants: ${prompt}`;
-
-            try {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
-                const headers = { 'Content-Type': 'application/json' };
-
-                const res = await fetch(url, {
-                    method: 'POST',
-                    headers,
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: sysPrompt }] }]
-                    })
-                });
-
-                if (!res.ok) {
-                    const err = await res.json().catch(() => ({}));
-                    const msg = err?.error?.message || `HTTP Error ${res.status}`;
-                    throw new Error(msg);
-                }
-
-                const data = await res.json();
-                let html = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-                // Strip markdown if present
-                html = html.replace(/^```html\s*/i, '').replace(/^```\s*/i, '').replace(/```$/i, '').trim();
-
-                if (!html) throw new Error('No HTML received from API');
-
-                generatedHtml = html;
-                preview.srcdoc = html;
-
-                dot.className = 'dot';
-                statusTxt.textContent = 'Done!';
-                showToast('✨ UI Generated!');
-
-            } catch (err) {
-                console.error(err);
-                dot.className = 'dot error';
-                statusTxt.textContent = 'Error';
-                showToast('❌ ' + err.message);
-            } finally {
-                genBtn.disabled = false;
-                genBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles" style="margin-right:6px"></i>Generate UI';
-                loading.classList.remove('show');
-            }
-        }
-
-        // ── Toast ─────────────────────────────────────────────────────
-        let toastTimer;
-        function showToast(msg) {
-            toastMsg.textContent = msg;
-            toast.classList.add('show');
-            clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
-        }
-    </script>
+// ── Toast ──────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+    toastMsg.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
+}
+</script>
 </body>
 </html>
