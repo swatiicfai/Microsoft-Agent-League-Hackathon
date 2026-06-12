@@ -398,14 +398,8 @@
         // ── Key input listener ────────────────────────────────────────
         apiKeyEl.addEventListener('input', () => {
             const k = apiKeyEl.value.trim();
-            if (k.length > 8) {
-                if (k.startsWith('AQ.')) {
-                    keyInd.textContent = '❌ Invalid format (must start with AIza)';
-                    keyInd.className = 'key-indicator no';
-                    keyInd.style.color = '#ef4444';
-                } else {
-                    markKeyOk();
-                }
+            if (k.length > 20) {
+                markKeyOk();
                 localStorage.setItem('autoui-key', k);
             } else {
                 keyInd.textContent = 'No key';
@@ -488,10 +482,6 @@ Requirements:
 User wants: ${prompt}`;
 
             try {
-                if (key.startsWith('AQ.')) {
-                    throw new Error('You pasted an OAuth token. Please go to aistudio.google.com/app/apikey and click "Create API key". A real key starts with "AIza".');
-                }
-
                 const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
                 const headers = { 'Content-Type': 'application/json' };
 
