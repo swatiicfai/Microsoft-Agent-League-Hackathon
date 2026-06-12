@@ -83,12 +83,10 @@ AutoUI demonstrates the power of autonomous agents in creative applications. Int
 ## 📦 What's Included
 
 ```
-├── index.html          # Interactive web interface
-├── main.py            # FastAPI backend server
-├── requirements.txt   # Python dependencies
-├── .env.example       # Environment configuration template
-├── SETUP.md          # Complete setup guide
-└── README.md         # This file
+├── index.html          # Interactive web interface (single-page app)
+├── AutoUI_Demo.mp4    # Demo video with AI voiceover
+├── screenshots/        # Screenshots of generated UIs
+└── README.md          # This file
 ```
 
 ---
@@ -97,12 +95,12 @@ AutoUI demonstrates the power of autonomous agents in creative applications. Int
 
 | Component | Technology |
 |-----------|-----------|
-| **Frontend** | HTML5, JavaScript, Tailwind CSS (via CDN), Font Awesome |
-| **Backend** | Python, FastAPI, Uvicorn, Python-dotenv |
-| **AI Integration** | **Microsoft Azure OpenAI API** (GPT-4o), Google Gemini 2.5 Flash API |
-| **Design Framework** | **Microsoft Foundry IQ** Guidelines Integration |
-| **Tooling** | **GitHub Copilot** |
-| **Deployment** | GitHub Pages (Frontend via GitHub Actions), Cloud Platforms |
+| **Frontend** | HTML5, Vanilla JavaScript, Tailwind CSS (CDN), Font Awesome |
+| **AI Engine** | Google Gemini 2.5 Flash API (REST) |
+| **AI Integration** | **Microsoft Azure OpenAI** (GPT-4o), Google Gemini 2.5 Flash |
+| **Design Framework** | **Microsoft Foundry IQ** Guidelines (Glassmorphism, Fluent UI) |
+| **Development Tool** | **GitHub Copilot** *(primary AI coding assistant used throughout)* |
+| **Deployment** | GitHub Pages via GitHub Actions CI/CD |
 
 ---
 
