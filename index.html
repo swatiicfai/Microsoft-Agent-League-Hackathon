@@ -6,116 +6,177 @@
     <title>AutoUI - Autonomous Frontend Designer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+        .spin { animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .pulse-ring { animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        #welcome-modal { backdrop-filter: blur(20px); }
+        .key-input:focus { box-shadow: 0 0 0 3px rgba(96,165,250,0.3); }
+    </style>
 </head>
 <body class="bg-slate-900 text-white h-screen overflow-hidden">
+
+    <!-- ═══════════════════════════════════════════════════════════
+         WELCOME / API KEY SETUP MODAL (auto-opens on first visit)
+    ═══════════════════════════════════════════════════════════ -->
+    <div id="welcome-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80">
+        <div class="bg-slate-800 border border-slate-600 rounded-2xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 p-6 text-center">
+                <div class="text-4xl mb-2">✨</div>
+                <h2 class="text-2xl font-bold text-white">Welcome to AutoUI</h2>
+                <p class="text-blue-100 text-sm mt-1">Autonomous Frontend Designer Agent</p>
+            </div>
+
+            <!-- Body -->
+            <div class="p-6 space-y-5">
+                <div class="bg-slate-700/50 border border-slate-600 rounded-xl p-4 text-sm text-gray-300 leading-relaxed">
+                    <p>AutoUI uses <strong class="text-white">Google Gemini AI</strong> to generate complete, beautiful UI pages from plain English descriptions. To get started, you need a <strong class="text-yellow-400">free Gemini API key</strong>.</p>
+                </div>
+
+                <!-- Step 1 -->
+                <div class="space-y-2">
+                    <div class="flex items-center gap-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                        <span class="bg-blue-600 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">1</span>
+                        Get your free API key
+                    </div>
+                    <a href="https://aistudio.google.com/app/apikey" target="_blank"
+                       class="flex items-center gap-3 bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded-lg px-4 py-3 transition-colors group">
+                        <i class="fa-solid fa-external-link-alt text-blue-400 text-sm"></i>
+                        <div>
+                            <div class="text-sm font-medium text-white group-hover:text-blue-300 transition-colors">aistudio.google.com/app/apikey</div>
+                            <div class="text-xs text-gray-400">Click "Create API key" → Copy the key</div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="space-y-2">
+                    <div class="flex items-center gap-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                        <span class="bg-blue-600 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">2</span>
+                        Paste your API key below
+                    </div>
+                    <div class="relative">
+                        <i class="fa-solid fa-key absolute left-3 top-1/2 -translate-y-1/2 text-yellow-400 text-sm"></i>
+                        <input
+                            type="text"
+                            id="welcome-key-input"
+                            placeholder="AIzaSy... or AQ. ..."
+                            class="key-input w-full bg-slate-700 border-2 border-slate-500 focus:border-blue-500 rounded-lg pl-9 pr-20 py-3 text-sm text-white placeholder-gray-500 outline-none transition-all"
+                            autocomplete="off" autocorrect="off" spellcheck="false"
+                        >
+                        <span id="welcome-key-ok" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-green-400 text-xs font-semibold">✓ Ready</span>
+                    </div>
+                    <p class="text-xs text-gray-500">Your key is stored only in your browser. Never sent to our servers.</p>
+                </div>
+
+                <!-- Error msg -->
+                <div id="welcome-error" class="hidden bg-red-900/50 border border-red-700 rounded-lg px-4 py-2 text-sm text-red-300"></div>
+
+                <!-- Start Button -->
+                <button id="welcome-start-btn"
+                    class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold py-3 rounded-xl transition-all text-base shadow-lg">
+                    <i class="fa-solid fa-rocket mr-2"></i>Start Generating UIs
+                </button>
+
+                <p class="text-center text-xs text-gray-500">Already have a key saved? <button id="skip-welcome" class="text-blue-400 hover:text-blue-300 underline">Skip setup →</button></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         MAIN APP
+    ═══════════════════════════════════════════════════════════ -->
     <div class="h-full flex flex-col">
         <!-- Navbar -->
-        <nav class="bg-slate-800 border-b border-slate-700 px-6 py-3 flex justify-between items-center">
+        <nav class="bg-slate-800 border-b border-slate-700 px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-2">
-                <i class="fa-solid fa-wand-magic-sparkles text-blue-500 text-2xl"></i>
-                <h1 class="text-2xl font-bold">AutoUI</h1>
-                <span class="text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full ml-1">by Swati Gupta</span>
+                <i class="fa-solid fa-wand-magic-sparkles text-blue-500 text-xl"></i>
+                <span class="text-xl font-bold gradient-text">AutoUI</span>
+                <span class="text-xs bg-slate-700 border border-slate-600 text-gray-300 px-2 py-0.5 rounded-full">by Swati Gupta</span>
             </div>
-            <div class="flex items-center gap-3">
-                <span class="text-sm"><i class="fa-solid fa-circle text-green-500 text-xs mr-1"></i>Ready</span>
-                <button id="settings-btn" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 px-3 py-2 rounded text-sm flex items-center gap-1.5 transition-colors">
-                    <i class="fa-solid fa-gear"></i>
-                    <span>Configure AI</span>
+            <div class="flex items-center gap-2">
+                <button id="change-key-btn" class="text-xs bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/30 text-yellow-400 px-3 py-1.5 rounded-lg transition-colors">
+                    <i class="fa-solid fa-key mr-1"></i><span id="key-label">No Key</span>
                 </button>
-                <button id="copy-btn" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
-                <button id="download-btn" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm"><i class="fa-solid fa-download mr-1"></i>Download</button>
+                <button id="copy-btn" class="bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded-lg text-sm transition-colors"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+                <button id="download-btn" class="bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-lg text-sm transition-colors"><i class="fa-solid fa-download mr-1"></i>Download</button>
             </div>
         </nav>
 
-        <!-- Settings Modal -->
-        <div id="settings-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center">
-            <div class="bg-slate-800 border border-slate-700 p-6 rounded-xl w-full max-w-md shadow-2xl text-white">
-                <h3 class="text-lg font-bold mb-4 flex items-center"><i class="fa-solid fa-gear text-blue-500 mr-2"></i> Agent Configuration</h3>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">AI Provider</label>
-                        <select id="provider-select" class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none focus:border-blue-500">
-                            <option value="gemini">Google Gemini (Default)</option>
-                            <option value="azure">Microsoft Azure OpenAI Service</option>
-                        </select>
-                    </div>
-                    <div id="gemini-config">
-                        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Gemini API Key</label>
-                        <input type="password" id="gemini-api-key" placeholder="Enter Gemini API Key..." class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none focus:border-blue-500">
-                    </div>
-                    <div id="azure-config" class="space-y-3 hidden">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Azure Endpoint URL</label>
-                            <input type="text" id="azure-endpoint" placeholder="e.g. https://my-resource.openai.azure.com" class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none focus:border-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Deployment Name</label>
-                            <input type="text" id="azure-deployment" placeholder="e.g. gpt-4o" class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none focus:border-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Azure API Key</label>
-                            <input type="password" id="azure-api-key" placeholder="Enter Azure API Key..." class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none focus:border-blue-500">
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-6 flex justify-end space-x-3">
-                    <button id="close-settings" class="bg-slate-600 hover:bg-slate-500 text-white px-4 py-2 rounded text-sm font-medium transition-colors">Close</button>
-                    <button id="save-settings" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium">Save Configuration</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Content -->
+        <!-- Main -->
         <div class="flex-1 flex overflow-hidden">
-            <!-- Left Sidebar -->
-            <div class="w-96 bg-slate-800 border-r border-slate-700 flex flex-col">
-                <!-- Chat History -->
-                <div id="chat-history" class="flex-1 overflow-y-auto p-4 space-y-4">
-                    <div class="bg-slate-700 rounded-lg p-3 text-sm">
+            <!-- Sidebar -->
+            <div class="w-80 bg-slate-800 border-r border-slate-700 flex flex-col">
+                <!-- Chat -->
+                <div id="chat-history" class="flex-1 overflow-y-auto p-3 space-y-3">
+                    <div class="bg-slate-700/70 rounded-xl p-3 text-sm text-gray-300 leading-relaxed">
                         <i class="fa-solid fa-robot text-blue-400 mr-2"></i>
-                        <span>Hi! Paste your API key below and describe the UI you want to create.</span>
+                        Hi! I'm AutoUI. Describe any UI and I'll build it instantly.
+                    </div>
+                    <div class="bg-slate-700/40 rounded-xl p-3 space-y-1.5">
+                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Try these examples:</p>
+                        <button class="example-btn w-full text-left text-xs bg-slate-600/50 hover:bg-blue-600/30 border border-slate-600 hover:border-blue-500/50 rounded-lg px-3 py-2 text-gray-300 transition-all">Dark login page with neon glow effects</button>
+                        <button class="example-btn w-full text-left text-xs bg-slate-600/50 hover:bg-blue-600/30 border border-slate-600 hover:border-blue-500/50 rounded-lg px-3 py-2 text-gray-300 transition-all">Analytics dashboard with charts and data cards</button>
+                        <button class="example-btn w-full text-left text-xs bg-slate-600/50 hover:bg-blue-600/30 border border-slate-600 hover:border-blue-500/50 rounded-lg px-3 py-2 text-gray-300 transition-all">Modern SaaS landing page with pricing table</button>
+                        <button class="example-btn w-full text-left text-xs bg-slate-600/50 hover:bg-blue-600/30 border border-slate-600 hover:border-blue-500/50 rounded-lg px-3 py-2 text-gray-300 transition-all">Portfolio site with animated hero section</button>
                     </div>
                 </div>
 
-                <!-- Microsoft Foundry IQ toggle -->
-                <div class="px-4 py-3 border-t border-slate-700 bg-slate-900/60 flex justify-between items-center">
+                <!-- Foundry IQ toggle -->
+                <div class="px-4 py-2.5 border-t border-slate-700 bg-slate-900/60 flex justify-between items-center">
                     <div class="flex items-center gap-1.5">
-                        <i class="fa-solid fa-brain text-blue-400 text-xs"></i>
-                        <span class="text-xs font-semibold text-gray-300 uppercase tracking-wider">Foundry IQ Constraints</span>
+                        <i class="fa-solid fa-brain text-purple-400 text-xs"></i>
+                        <span class="text-xs font-semibold text-gray-300 uppercase tracking-wider">Foundry IQ Style</span>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" id="use-design-system" class="sr-only peer" checked>
-                        <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                        <div class="w-9 h-5 bg-slate-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-purple-600"></div>
                     </label>
                 </div>
 
-                <!-- Input Area -->
-                <div class="p-4 border-t border-slate-700 bg-slate-900 space-y-2">
-                    <div class="flex items-center gap-2 bg-slate-800 border border-slate-600 rounded px-3 py-2">
-                        <i class="fa-solid fa-key text-yellow-400 text-xs flex-shrink-0"></i>
-                        <input type="password" id="inline-api-key" placeholder="Paste Gemini API key here..." class="flex-1 bg-transparent text-sm text-white focus:outline-none placeholder-gray-500 min-w-0">
-                        <span id="key-status" class="text-xs text-gray-500 flex-shrink-0">No key</span>
-                    </div>
-                    <textarea id="prompt" rows="3" placeholder="E.g., Create a dark login page with neon effects..." class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500 resize-none"></textarea>
-                    <button id="send-btn" class="w-full bg-blue-600 hover:bg-blue-700 py-2.5 rounded text-sm font-semibold transition-colors">
-                        <i class="fa-solid fa-paper-plane mr-2"></i>Generate UI
+                <!-- Input -->
+                <div class="p-3 border-t border-slate-700 bg-slate-900 space-y-2">
+                    <textarea id="prompt" rows="3"
+                        placeholder="Describe a UI to build..."
+                        class="w-full bg-slate-700 border border-slate-600 focus:border-blue-500 rounded-xl px-3 py-2.5 text-sm text-white placeholder-gray-500 outline-none resize-none transition-colors"></textarea>
+                    <button id="send-btn"
+                        class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 py-2.5 rounded-xl text-sm font-bold transition-all shadow-md">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-2"></i>Generate UI
                     </button>
+                    <p class="text-xs text-gray-600 text-center">Ctrl+Enter to generate</p>
                 </div>
             </div>
 
-            <!-- Right Preview -->
-            <div class="flex-1 flex flex-col bg-white">
-                <div class="bg-gray-200 border-b border-gray-300 px-4 py-2 flex justify-between items-center">
-                    <span class="text-sm text-gray-700 font-medium">AutoUI Live Preview</span>
-                    <span id="status" class="text-sm text-gray-600"><i class="fa-solid fa-circle text-green-500 text-xs mr-1"></i>Ready</span>
+            <!-- Preview -->
+            <div class="flex-1 flex flex-col">
+                <div class="bg-slate-800 border-b border-slate-700 px-4 py-2 flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        <span class="text-xs text-gray-400 ml-2 font-medium">Live Preview</span>
+                    </div>
+                    <span id="status" class="text-xs text-gray-400"><i class="fa-solid fa-circle text-green-500 mr-1"></i>Ready</span>
                 </div>
-                <div id="preview-container" class="flex-1 relative overflow-auto">
-                    <iframe id="preview" class="w-full h-full border-0" srcdoc="<html><body style='display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#999;background:linear-gradient(135deg,#f5f7fa,#c3cfe2);'><div style='text-align:center;'><h1 style='color:#333;margin:0;font-size:2rem;'>✨ AutoUI</h1><p style='color:#999;margin:12px 0 0;'>Paste your API key and describe a UI to get started</p></div></body></html>"></iframe>
-                    <div id="loading" class="absolute inset-0 bg-white/80 hidden flex items-center justify-center">
+                <div class="flex-1 relative bg-white">
+                    <iframe id="preview" class="w-full h-full border-0"
+                        srcdoc="<html><body style='margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f172a,#1e293b);font-family:sans-serif;'><div style='text-align:center;color:#fff;'><div style='font-size:3rem;margin-bottom:12px;'>✨</div><h1 style='font-size:1.5rem;font-weight:700;margin:0 0 8px;'>AutoUI Ready</h1><p style='color:#94a3b8;margin:0;font-size:0.9rem;'>Add your API key and describe a UI to get started</p></div></body></html>">
+                    </iframe>
+                    <div id="loading" class="hidden absolute inset-0 bg-slate-900/90 flex items-center justify-center">
                         <div class="text-center">
-                            <div class="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-3"></div>
-                            <p class="text-gray-700 font-semibold">Agent is designing...</p>
-                            <p class="text-gray-500 text-sm mt-1">Generating with AI</p>
+                            <div class="w-14 h-14 border-4 border-blue-900 border-t-blue-500 rounded-full spin mx-auto mb-4"></div>
+                            <p class="text-white font-semibold text-lg">Designing your UI...</p>
+                            <p class="text-gray-400 text-sm mt-1">AI agent is working</p>
                         </div>
                     </div>
                 </div>
@@ -124,210 +185,206 @@
     </div>
 
     <!-- Toast -->
-    <div id="toast" class="fixed bottom-4 right-4 hidden bg-gray-900 text-white px-4 py-3 rounded-lg shadow-lg text-sm">
-        <i class="fa-solid fa-check mr-2"></i><span id="toast-text"></span>
+    <div id="toast" class="fixed bottom-5 right-5 hidden bg-slate-800 border border-slate-600 text-white px-5 py-3 rounded-xl shadow-2xl text-sm flex items-center gap-2">
+        <i class="fa-solid fa-circle-check text-green-400"></i>
+        <span id="toast-text"></span>
     </div>
 
     <script>
-        // DOM refs
-        const promptInput    = document.getElementById('prompt');
-        const sendBtn        = document.getElementById('send-btn');
-        const chatHistory    = document.getElementById('chat-history');
-        const preview        = document.getElementById('preview');
-        const loading        = document.getElementById('loading');
-        const statusEl       = document.getElementById('status');
-        const copyBtn        = document.getElementById('copy-btn');
-        const downloadBtn    = document.getElementById('download-btn');
-        const inlineKeyInput = document.getElementById('inline-api-key');
-        const keyStatus      = document.getElementById('key-status');
-        const settingsBtn    = document.getElementById('settings-btn');
-        const settingsModal  = document.getElementById('settings-modal');
-        const closeSettings  = document.getElementById('close-settings');
-        const saveSettings   = document.getElementById('save-settings');
-        const providerSelect = document.getElementById('provider-select');
-        const geminiCfgEl    = document.getElementById('gemini-config');
-        const azureCfgEl     = document.getElementById('azure-config');
-        const foundryToggle  = document.getElementById('use-design-system');
-
+        // ── Config ──────────────────────────────────────────────────────
+        let cfg = JSON.parse(localStorage.getItem('autoui-cfg') || '{}');
+        cfg = { provider: 'gemini', geminiKey: '', ...cfg };
         let currentHtml = '';
 
-        // Load saved config
-        let cfg = JSON.parse(localStorage.getItem('autoui-cfg')) || {
-            provider: 'gemini', geminiKey: '',
-            azureEndpoint: '', azureDeployment: '', azureKey: ''
-        };
+        // ── DOM ─────────────────────────────────────────────────────────
+        const welcomeModal    = document.getElementById('welcome-modal');
+        const welcomeKeyInput = document.getElementById('welcome-key-input');
+        const welcomeKeyOk    = document.getElementById('welcome-key-ok');
+        const welcomeError    = document.getElementById('welcome-error');
+        const welcomeStartBtn = document.getElementById('welcome-start-btn');
+        const skipWelcome     = document.getElementById('skip-welcome');
+        const changeKeyBtn    = document.getElementById('change-key-btn');
+        const keyLabel        = document.getElementById('key-label');
+        const prompt          = document.getElementById('prompt');
+        const sendBtn         = document.getElementById('send-btn');
+        const chatHistory     = document.getElementById('chat-history');
+        const preview         = document.getElementById('preview');
+        const loading         = document.getElementById('loading');
+        const statusEl        = document.getElementById('status');
+        const copyBtn         = document.getElementById('copy-btn');
+        const downloadBtn     = document.getElementById('download-btn');
+        const foundryToggle   = document.getElementById('use-design-system');
 
-        // Restore inline key if saved
-        if (cfg.geminiKey) setKeyOk(cfg.geminiKey);
+        // ── Welcome Modal Logic ─────────────────────────────────────────
+        function closeWelcome() { welcomeModal.classList.add('hidden'); }
 
-        function setKeyOk(k) {
-            inlineKeyInput.value = k;
-            keyStatus.textContent = '✓ Key set';
-            keyStatus.className = 'text-xs text-green-400 flex-shrink-0';
-        }
-
-        // Inline key watcher
-        inlineKeyInput.addEventListener('input', () => {
-            const k = inlineKeyInput.value.trim();
-            if (k.length > 8) {
-                cfg.geminiKey = k;
-                cfg.provider = 'gemini';
-                localStorage.setItem('autoui-cfg', JSON.stringify(cfg));
-                keyStatus.textContent = '✓ Key set';
-                keyStatus.className = 'text-xs text-green-400 flex-shrink-0';
+        function updateKeyLabel() {
+            if (cfg.geminiKey) {
+                keyLabel.textContent = 'Key: ' + cfg.geminiKey.slice(0, 8) + '...';
+                changeKeyBtn.classList.replace('text-yellow-400', 'text-green-400');
+                changeKeyBtn.classList.replace('border-yellow-500/30', 'border-green-500/30');
+                changeKeyBtn.classList.replace('bg-yellow-500/10', 'bg-green-500/10');
             } else {
-                keyStatus.textContent = 'No key';
-                keyStatus.className = 'text-xs text-gray-500 flex-shrink-0';
+                keyLabel.textContent = 'No Key — Click to add';
             }
+        }
+
+        // Show welcome modal if no key saved
+        if (!cfg.geminiKey) {
+            welcomeModal.classList.remove('hidden');
+        } else {
+            welcomeModal.classList.add('hidden');
+        }
+        updateKeyLabel();
+
+        // Typing in welcome key input
+        welcomeKeyInput.addEventListener('input', () => {
+            const k = welcomeKeyInput.value.trim();
+            welcomeKeyOk.classList.toggle('hidden', k.length < 10);
+            welcomeError.classList.add('hidden');
         });
 
-        // Settings modal
-        function syncModal() {
-            providerSelect.value = cfg.provider;
-            document.getElementById('gemini-api-key').value   = cfg.geminiKey || '';
-            document.getElementById('azure-endpoint').value   = cfg.azureEndpoint || '';
-            document.getElementById('azure-deployment').value = cfg.azureDeployment || '';
-            document.getElementById('azure-api-key').value    = cfg.azureKey || '';
-            toggleProvider(cfg.provider);
-        }
-        function toggleProvider(p) {
-            geminiCfgEl.classList.toggle('hidden', p !== 'gemini');
-            azureCfgEl.classList.toggle('hidden', p === 'gemini');
-        }
-
-        providerSelect.addEventListener('change', e => toggleProvider(e.target.value));
-        settingsBtn.addEventListener('click', () => { syncModal(); settingsModal.classList.remove('hidden'); });
-        closeSettings.addEventListener('click', () => settingsModal.classList.add('hidden'));
-        saveSettings.addEventListener('click', () => {
-            cfg.provider        = providerSelect.value;
-            cfg.geminiKey       = document.getElementById('gemini-api-key').value.trim();
-            cfg.azureEndpoint   = document.getElementById('azure-endpoint').value.trim();
-            cfg.azureDeployment = document.getElementById('azure-deployment').value.trim();
-            cfg.azureKey        = document.getElementById('azure-api-key').value.trim();
+        // Start button
+        welcomeStartBtn.addEventListener('click', () => {
+            const k = welcomeKeyInput.value.trim();
+            if (k.length < 10) {
+                welcomeError.textContent = '⚠️ Please paste a valid API key first.';
+                welcomeError.classList.remove('hidden');
+                welcomeKeyInput.focus();
+                return;
+            }
+            cfg.geminiKey = k;
+            cfg.provider = 'gemini';
             localStorage.setItem('autoui-cfg', JSON.stringify(cfg));
-            if (cfg.provider === 'gemini' && cfg.geminiKey) setKeyOk(cfg.geminiKey);
-            settingsModal.classList.add('hidden');
-            addMsg('✅ Configuration saved! Ready to generate.', 'agent');
-            showToast('Settings Saved!');
+            updateKeyLabel();
+            closeWelcome();
+            addMsg('🚀 API key saved! Now describe any UI and I\'ll build it.', 'agent');
+            showToast('API key saved!');
         });
 
-        // Copy & Download
+        skipWelcome.addEventListener('click', () => {
+            if (!cfg.geminiKey) {
+                welcomeError.textContent = 'No saved key found. Please paste your API key above.';
+                welcomeError.classList.remove('hidden');
+                return;
+            }
+            closeWelcome();
+        });
+
+        // Change key button in navbar
+        changeKeyBtn.addEventListener('click', () => {
+            welcomeKeyInput.value = cfg.geminiKey || '';
+            welcomeKeyOk.classList.toggle('hidden', !cfg.geminiKey);
+            welcomeError.classList.add('hidden');
+            welcomeModal.classList.remove('hidden');
+            setTimeout(() => welcomeKeyInput.focus(), 100);
+        });
+
+        // Example prompts
+        document.querySelectorAll('.example-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                prompt.value = btn.textContent.trim();
+                prompt.focus();
+            });
+        });
+
+        // ── Copy / Download ─────────────────────────────────────────────
         copyBtn.addEventListener('click', () => {
             if (!currentHtml) { showToast('Generate a UI first!'); return; }
-            navigator.clipboard.writeText(currentHtml).then(() => showToast('Copied!'));
+            navigator.clipboard.writeText(currentHtml).then(() => showToast('HTML copied!'));
         });
         downloadBtn.addEventListener('click', () => {
             if (!currentHtml) { showToast('Generate a UI first!'); return; }
             const a = document.createElement('a');
-            a.href = 'data:text/html,' + encodeURIComponent(currentHtml);
-            a.download = 'autoui-generated.html';
+            a.href = 'data:text/html;charset=utf-8,' + encodeURIComponent(currentHtml);
+            a.download = 'autoui-design.html';
             a.click();
             showToast('Downloaded!');
         });
 
-        // Generate
+        // ── Generate ────────────────────────────────────────────────────
         sendBtn.addEventListener('click', generateUI);
-        promptInput.addEventListener('keypress', e => { if (e.key === 'Enter' && e.ctrlKey) generateUI(); });
+        prompt.addEventListener('keydown', e => { if (e.key === 'Enter' && e.ctrlKey) generateUI(); });
 
         async function generateUI() {
-            const text = promptInput.value.trim();
-            if (!text) { showToast('Enter a description first!'); return; }
+            const text = prompt.value.trim();
+            if (!text) { showToast('Please describe a UI first!'); return; }
 
-            // Sync inline key into config
-            const inlineKey = inlineKeyInput.value.trim();
-            if (inlineKey) { cfg.geminiKey = inlineKey; cfg.provider = 'gemini'; }
-
-            if (cfg.provider === 'gemini' && !cfg.geminiKey) {
-                addMsg('⚠️ Please paste your Gemini API key in the field above the textarea.', 'agent');
-                inlineKeyInput.focus();
-                return;
-            }
-            if (cfg.provider === 'azure' && (!cfg.azureEndpoint || !cfg.azureKey || !cfg.azureDeployment)) {
-                addMsg('⚠️ Click "Configure AI" to set up your Azure OpenAI credentials.', 'agent');
+            if (!cfg.geminiKey) {
+                welcomeModal.classList.remove('hidden');
+                welcomeKeyInput.focus();
                 return;
             }
 
             addMsg(text, 'user');
-            promptInput.value = '';
+            prompt.value = '';
             loading.classList.remove('hidden');
-            statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1 text-blue-500"></i>Generating...';
+            statusEl.innerHTML = '<i class="fa-solid fa-spinner spin mr-1 text-blue-400"></i>Generating...';
 
             const foundryCtx = foundryToggle.checked
-                ? '\nUse modern premium design: dark backgrounds, glassmorphism, blue/purple accents, Fluent-inspired UI, smooth animations.\n'
+                ? '\nUse dark premium design with glassmorphism, blue/purple accents, Fluent-style navigation, and micro-animations.\n'
                 : '';
 
-            const sysPrompt = `You are an expert frontend UI designer. Generate a complete, beautiful, production-ready HTML page.
-Always include: <script src="https://cdn.tailwindcss.com"><\/script>
-Always include: <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-Return ONLY raw HTML. No markdown. No code fences. No explanation.${foundryCtx}`;
+            const sysPrompt = `You are an expert frontend designer. Generate a complete, production-ready HTML page.
+RULES:
+- Include <script src="https://cdn.tailwindcss.com"></script> in <head>
+- Include <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"> in <head>  
+- Return ONLY raw HTML. No markdown. No backticks. No explanation.
+- Make it visually stunning and complete.${foundryCtx}`;
 
             try {
-                let html = '';
+                const fullPrompt = sysPrompt + '\n\nCreate this UI: ' + text;
+                const key = cfg.geminiKey;
 
-                if (cfg.provider === 'gemini') {
-                    const key = cfg.geminiKey;
-                    const fullPrompt = sysPrompt + '\n\nUser request: ' + text;
+                // Detect key format: AQ. uses Bearer, AIzaSy uses ?key=
+                const useBearer = key.startsWith('AQ.');
+                const url = useBearer
+                    ? 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent'
+                    : `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
+                const headers = { 'Content-Type': 'application/json' };
+                if (useBearer) headers['Authorization'] = 'Bearer ' + key;
 
-                    // Support both AQ. (Bearer) and AIzaSy (?key=) formats
-                    const useBearer = key.startsWith('AQ.');
-                    const url = useBearer
-                        ? 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent'
-                        : `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
-                    const headers = useBearer
-                        ? { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key }
-                        : { 'Content-Type': 'application/json' };
+                const res = await fetch(url, {
+                    method: 'POST', headers,
+                    body: JSON.stringify({ contents: [{ parts: [{ text: fullPrompt }] }] })
+                });
 
-                    const res = await fetch(url, {
-                        method: 'POST', headers,
-                        body: JSON.stringify({ contents: [{ parts: [{ text: fullPrompt }] }] })
-                    });
-
-                    if (!res.ok) {
-                        const e = await res.json().catch(() => ({}));
-                        throw new Error(e?.error?.message || `HTTP ${res.status}`);
+                if (!res.ok) {
+                    const errJson = await res.json().catch(() => ({}));
+                    const errMsg = errJson?.error?.message || `HTTP ${res.status}`;
+                    if (res.status === 401 || res.status === 403) {
+                        throw new Error('Invalid API key. Click the key button in the navbar to update it.');
                     }
-                    const data = await res.json();
-                    html = data.candidates[0].content.parts[0].text;
-
-                } else {
-                    const ep = cfg.azureEndpoint.replace(/\/$/, '');
-                    const url = `${ep}/openai/deployments/${cfg.azureDeployment}/chat/completions?api-version=2024-02-15-preview`;
-                    const res = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'api-key': cfg.azureKey },
-                        body: JSON.stringify({
-                            messages: [{ role: 'system', content: sysPrompt }, { role: 'user', content: text }],
-                            temperature: 0.7
-                        })
-                    });
-                    if (!res.ok) throw new Error(`Azure error: HTTP ${res.status}`);
-                    const data = await res.json();
-                    html = data.choices[0].message.content;
+                    throw new Error(errMsg);
                 }
 
-                html = html.replace(/^```html\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim();
+                const data = await res.json();
+                let html = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                html = html.replace(/^```html\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/gi, '').trim();
+
                 currentHtml = html;
                 preview.srcdoc = html;
-                addMsg('✨ Done! Your UI is live in the preview panel →', 'agent');
+                addMsg('✨ UI generated! See the preview on the right →', 'agent');
                 showToast('UI Generated!');
-                statusEl.innerHTML = '<i class="fa-solid fa-circle text-green-500 text-xs mr-1"></i>Ready';
+                statusEl.innerHTML = '<i class="fa-solid fa-circle text-green-500 mr-1"></i>Ready';
 
             } catch (err) {
                 console.error(err);
                 addMsg('❌ ' + err.message, 'agent');
-                showToast('Failed');
-                statusEl.innerHTML = '<i class="fa-solid fa-circle text-red-500 text-xs mr-1"></i>Error';
+                showToast('Error generating UI');
+                statusEl.innerHTML = '<i class="fa-solid fa-circle text-red-500 mr-1"></i>Error';
             } finally {
                 loading.classList.add('hidden');
             }
         }
 
+        // ── Helpers ─────────────────────────────────────────────────────
         function addMsg(text, sender) {
             const div = document.createElement('div');
             div.className = sender === 'user'
-                ? 'bg-blue-600 rounded-lg p-3 text-sm ml-6'
-                : 'bg-slate-700 rounded-lg p-3 text-sm mr-6';
-            div.innerHTML = `<i class="fa-solid fa-${sender === 'user' ? 'user' : 'robot'} mr-2 opacity-70"></i>${text}`;
+                ? 'bg-blue-600/80 border border-blue-500/50 rounded-xl p-3 text-sm ml-4'
+                : 'bg-slate-700/70 border border-slate-600/50 rounded-xl p-3 text-sm text-gray-300';
+            div.innerHTML = `<i class="fa-solid fa-${sender === 'user' ? 'user' : 'robot'} mr-2 opacity-60"></i>${text}`;
             chatHistory.appendChild(div);
             chatHistory.scrollTop = chatHistory.scrollHeight;
         }
@@ -336,7 +393,7 @@ Return ONLY raw HTML. No markdown. No code fences. No explanation.${foundryCtx}`
             const t = document.getElementById('toast');
             document.getElementById('toast-text').textContent = msg;
             t.classList.remove('hidden');
-            setTimeout(() => t.classList.add('hidden'), 2500);
+            setTimeout(() => t.classList.add('hidden'), 3000);
         }
     </script>
 </body>
