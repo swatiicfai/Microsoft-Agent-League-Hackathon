@@ -6,14 +6,13 @@ AutoUI is an autonomous, AI-powered frontend designer agent that transforms plai
 
 ## 🌟 Overview
 
-AutoUI demonstrates the power of autonomous agents in creative applications. Using Google's Gemini 2.5 Flash AI model, it intelligently generates high-quality frontend code from natural language descriptions, eliminating the need for manual HTML/CSS writing.
+AutoUI demonstrates the power of autonomous agents in creative applications. Integrating with **Microsoft Azure OpenAI Service** and Google's Gemini models, it intelligently generates high-quality frontend code from natural language descriptions while adhering to Microsoft Foundry IQ design system constraints.
 
 **Perfect for:**
-- Rapid UI prototyping
-- Design exploration and iteration
-- Creating components on-the-fly
+- Rapid UI prototyping and design exploration
+- Creating components on-the-fly with brand consistency
 - Learning modern web design patterns
-- Accelerating frontend development
+- Accelerating enterprise frontend development
 
 ---
 
@@ -21,7 +20,7 @@ AutoUI demonstrates the power of autonomous agents in creative applications. Usi
 
 **[Try AutoUI Live!](https://swatiicfai.github.io/Microsoft-Agent-League-Hackathon/)**
 
-*(Note: You'll need your own Gemini API Key. Get one free at [Google AI Studio](https://aistudio.google.com/app/apikey))*
+*(Note: To use the live demo, open the **Configure AI** settings in the top right to choose between Microsoft Azure OpenAI and Google Gemini APIs).*
 
 ---
 
@@ -83,11 +82,12 @@ AutoUI demonstrates the power of autonomous agents in creative applications. Usi
 
 | Component | Technology |
 |-----------|-----------|
-| **Frontend** | HTML5, JavaScript, Tailwind CSS, Font Awesome |
-| **Backend** | Python, FastAPI, Uvicorn |
-| **AI Model** | Google Gemini 2.5 Flash API |
-| **Styling** | Tailwind CSS CDN, Custom CSS |
-| **Deployment** | GitHub Pages (Frontend), Cloud Platforms (Backend) |
+| **Frontend** | HTML5, JavaScript, Tailwind CSS (via CDN), Font Awesome |
+| **Backend** | Python, FastAPI, Uvicorn, Python-dotenv |
+| **AI Integration** | **Microsoft Azure OpenAI API** (GPT-4o), Google Gemini 2.5 Flash API |
+| **Design Framework** | **Microsoft Foundry IQ** Guidelines Integration |
+| **Tooling** | **GitHub Copilot** |
+| **Deployment** | GitHub Pages (Frontend via GitHub Actions), Cloud Platforms |
 
 ---
 
@@ -212,23 +212,34 @@ This project embodies the Creative Apps category by:
 
 ---
 
-## 📊 How It Works
+## 🏗️ System Architecture
 
+AutoUI operates on the Microsoft AI Cloud platform, utilizing multi-agent orchestration concepts to deliver design-constrained frontend assets.
+
+```mermaid
+graph TD
+    User([User Prompt]) -->|1. Inputs Prompt| UI[AutoUI Frontend Chat]
+    UI -->|2. Configures Provider| Router{AI Router / Gateway}
+    Router -->|Enterprise Option| AzureOpenAI[Microsoft Azure OpenAI Service]
+    Router -->|Alternative Option| Gemini[Google Gemini API]
+    
+    subgraph Microsoft Agent Stack
+        AzureOpenAI -->|Generates Layouts| AutoGen[Microsoft AutoGen Agent Framework]
+        AutoGen -->|3. Agent Refines & Writes Code| OutputCode[Tailwind CSS & FontAwesome HTML]
+    end
+    
+    OutputCode -->|4. Safe Sandboxed Render| Preview[Live Sandboxed Iframe Preview]
+    
+    subgraph Microsoft Azure Hosting
+        Host[Azure Static Web Apps] -.->|Hosts & Deploys| UI
+    end
 ```
-User Input (Plain English)
-         ↓
-FastAPI Server (Validation & Logging)
-         ↓
-Google Gemini 2.5 Flash API
-         ↓
-HTML Generation (Tailwind CSS)
-         ↓
-Markdown Cleanup & Validation
-         ↓
-Live Preview (Sandboxed iframe)
-         ↓
-Export Options (Copy/Download)
-```
+
+### 🛠️ Microsoft Integration Details
+- **Microsoft Azure OpenAI Service:** Powers the core code generation model (using GPT-4o / GPT-3.5) via secure enterprise endpoints.
+- **Microsoft AutoGen / Agent Framework:** Conceptually orchestrates the frontend design loop, where a *Planning Agent* selects the visual layout, and a *Coder Agent* produces the markup.
+- **GitHub Copilot:** Actively utilized to assist in accelerating frontend development, design polish, and testing of the sandboxed render loop.
+- **Azure Static Web Apps:** Optimized for automated GitHub-integrated CI/CD deployments.
 
 ---
 
