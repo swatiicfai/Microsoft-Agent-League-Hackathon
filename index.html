@@ -244,30 +244,23 @@
             welcomeError.classList.add('hidden');
         });
 
-        // Start button
+        // Start button - always closes, saves key if provided
         welcomeStartBtn.addEventListener('click', () => {
             const k = welcomeKeyInput.value.trim();
-            if (k.length < 10) {
-                welcomeError.textContent = '⚠️ Please paste a valid API key first.';
-                welcomeError.classList.remove('hidden');
-                welcomeKeyInput.focus();
-                return;
+            if (k.length >= 8) {
+                cfg.geminiKey = k;
+                cfg.provider = 'gemini';
+                localStorage.setItem('autoui-cfg', JSON.stringify(cfg));
+                updateKeyLabel();
+                showToast('✅ API key saved!');
+                addMsg('🚀 API key saved! Now describe any UI and I\'ll build it.', 'agent');
+            } else {
+                addMsg('👋 Welcome! Type a prompt below to generate a UI. (Add your API key via the key button in the navbar)', 'agent');
             }
-            cfg.geminiKey = k;
-            cfg.provider = 'gemini';
-            localStorage.setItem('autoui-cfg', JSON.stringify(cfg));
-            updateKeyLabel();
             closeWelcome();
-            addMsg('🚀 API key saved! Now describe any UI and I\'ll build it.', 'agent');
-            showToast('API key saved!');
         });
 
         skipWelcome.addEventListener('click', () => {
-            if (!cfg.geminiKey) {
-                welcomeError.textContent = 'No saved key found. Please paste your API key above.';
-                welcomeError.classList.remove('hidden');
-                return;
-            }
             closeWelcome();
         });
 
