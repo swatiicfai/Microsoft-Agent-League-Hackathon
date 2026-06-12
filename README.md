@@ -26,17 +26,17 @@ AutoUI demonstrates the power of autonomous agents in creative applications. Int
 
 ## 📸 Screenshots
 
-### The AutoUI Interface — Clean, Dark & Minimal
-![AutoUI App Interface](screenshots/02_neon_login.png)
+### Dashboard with Live Analytics
+![Dashboard](screenshots/final_01_dashboard.png)
 
-### AI Generating a Comic Strip UI from a Single Sentence
-![Comic Strip UI Generated](screenshots/03_comic_ui.png)
+### Animated Portfolio Page
+![Portfolio UI](screenshots/final_02_portfolio_top.png)
 
-### E-Commerce Product Grid with Filters — Generated in Seconds
-![E-Commerce UI Generated](screenshots/04_ecommerce_ui.png)
+### Portfolio Page (Scrolled Content)
+![Portfolio Details](screenshots/final_03_portfolio_scroll.png)
 
-### Animated Portfolio Page — One Prompt, Full Landing Page
-![Portfolio UI Generated](screenshots/05_pipeline_portfolio.png)
+### Neon Glassmorphism Login
+![Neon Login](screenshots/final_04_login.png)
 
 ---
 
@@ -152,13 +152,6 @@ All with modern design trends: glassmorphism, gradients, animations, dark themes
 
 ---
 
-## 🎬 Demo Video
-
-Watch the full AutoUI demo with an AI voiceover showing multiple real-time generations:
-
-**[Watch AutoUI_Demo_Final.mp4](AutoUI_Demo_Final.mp4)** *(Click to watch directly on GitHub)*
-
----
 
 ## 📖 Complete Setup Guide
 
