@@ -20,7 +20,23 @@ AutoUI demonstrates the power of autonomous agents in creative applications. Int
 
 **[Try AutoUI Live!](https://swatiicfai.github.io/Microsoft-Agent-League-Hackathon/)**
 
-*(Note: To use the live demo, open the **Configure AI** settings in the top right to choose between Microsoft Azure OpenAI and Google Gemini APIs).*
+> Paste your free Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey), describe a UI, and click **Generate UI**!
+
+---
+
+## 📸 Screenshots
+
+### The AutoUI Interface — Clean, Dark & Minimal
+![AutoUI App Interface](screenshots/02_generating.png)
+
+### AI Generating a Comic Strip UI from a Single Sentence
+![Comic Strip UI Generated](screenshots/03_comic_ui.png)
+
+### E-Commerce Product Grid with Filters — Generated in Seconds
+![E-Commerce UI Generated](screenshots/04_ecommerce_ui.png)
+
+### Animated Portfolio Page — One Prompt, Full Landing Page
+![Portfolio UI Generated](screenshots/05_portfolio_ui.png)
 
 ---
 
