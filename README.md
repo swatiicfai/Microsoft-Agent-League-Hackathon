@@ -11,8 +11,19 @@ AutoUI demonstrates the power of autonomous agents in creative applications. Int
 **Perfect for:**
 - Rapid UI prototyping and design exploration
 - Creating components on-the-fly with brand consistency
-- Learning modern web design patterns
-- Accelerating enterprise frontend development
+- Showcasing **Reasoning & Multi-step Thinking** via autonomous agent pipelines
+
+---
+
+## 🏆 Hackathon Judging Alignment
+
+| Judging Criteria | How AutoUI Delivers |
+|------------------|---------------------|
+| **Accuracy & Relevance** | Fully functions as a creative tool that uses AI agents to solve real-world frontend development challenges. |
+| **Reasoning & Multi-step Thinking** | Implements a visible 3-step autonomous pipeline (Plan ➡️ Write ➡️ Review) showing clear problem-solving logic. |
+| **Creativity & Originality** | Bypasses traditional drag-and-drop builders for a purely prompt-driven, multi-agent generative experience. |
+| **User Experience & Presentation** | Features a highly polished, responsive, and glassmorphic UI that is instantly demoable in the browser. |
+| **Reliability & Safety** | Uses a sandboxed iframe for rendering code to prevent XSS, and processes everything client-side without storing keys. |
 
 ---
 
@@ -42,10 +53,10 @@ AutoUI demonstrates the power of autonomous agents in creative applications. Int
 
 ## ✨ Key Features
 
-### 🤖 Autonomous Generation
-- Describe what you want in plain English
-- AI agent handles layout, styling, and component structure
-- No coding required
+### 🤖 3-Step Agentic Reasoning Pipeline
+- **Design Planner Agent:** Analyzes the prompt and generates a structured design brief.
+- **Code Writer Agent:** Translates the design brief into production-ready HTML/Tailwind code.
+- **Quality Reviewer Agent:** Evaluates the output, scores it, and ensures it meets Microsoft Foundry IQ standards.
 
 ### 🎨 Modern Design Output
 - **Tailwind CSS** - Utility-first styling framework
@@ -84,8 +95,7 @@ AutoUI demonstrates the power of autonomous agents in creative applications. Int
 
 ```
 ├── index.html          # Interactive web interface (single-page app)
-├── AutoUI_Demo_Final.mp4    # Demo video with AI voiceover
-├── screenshots/        # Screenshots of generated UIs
+├── screenshots/        # Screenshots of the generated UIs and pipeline
 └── README.md          # This file
 ```
 
