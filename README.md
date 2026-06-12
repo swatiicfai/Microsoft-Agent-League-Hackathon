@@ -72,8 +72,7 @@ AutoUI demonstrates the power of autonomous agents in creative applications. Int
 ├── requirements.txt   # Python dependencies
 ├── .env.example       # Environment configuration template
 ├── SETUP.md          # Complete setup guide
-├── README.md         # This file
-└── AutoUI_Demo.mp4   # Demo video
+└── README.md         # This file
 ```
 
 ---
@@ -139,13 +138,7 @@ All with modern design trends: glassmorphism, gradients, animations, dark themes
 
 ---
 
-## 🎬 Demo
 
-Watch the full AutoUI demo with AI voiceover showing multiple real-time generations:
-
-[**AutoUI_Demo.mp4**](AutoUI_Demo.mp4) *(Click to watch)*
-
----
 
 ## 📖 Complete Setup Guide
 
