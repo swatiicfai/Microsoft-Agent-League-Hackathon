@@ -138,7 +138,13 @@ All with modern design trends: glassmorphism, gradients, animations, dark themes
 
 ---
 
+## 🎬 Demo Video
 
+Watch the full AutoUI demo with an AI voiceover showing multiple real-time generations:
+
+**[Watch AutoUI_Demo.mp4](AutoUI_Demo.mp4)** *(Click to watch directly on GitHub)*
+
+---
 
 ## 📖 Complete Setup Guide
 
